@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html
+        layout:decorate="~{layout/defaultLayout}"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" th:href="@{/css/module/history.css}"/>
+</head>
+<th:block layout:fragment="content_body">
+    <section class="content p-4">
+        <div class="text-sm mb-3 font-weight-medium">
+            <span data-th-text="#{his}"></span>
+            <span> › </span>
+            <span data-th-text="#{sys_log}"></span>
+        </div>
+        <div class="">
+            <div class="border px-3 pt-3 pb-1 rounded-lg d-flex justify-content-between align-items-end" >
+                <div class="d-flex align-items-center headerFilter">
+                    <div class="searchField">
+                        <div class="label text-uppercase">
+                            <span data-th-text="#{date}"></span>:
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btnCalendar">
+                                <i class="far fa-calendar-alt"></i>
+                            </button>
+                            <input type="text" class="field" id="searchDate" size="10" oninput="limitInputLength(this)" placeholder="yyyy/mm/dd" />
+                        </div>
+                    </div>
+                    <div class="searchField">
+                        <div class="label text-uppercase">
+                            <span data-th-text="#{system}"></span>:
+                        </div>
+                        <div class="select" style="width: 140px;">
+                            <select class="field select-custom" id="searchSystem" style="width:5em">
+                                <option value="">ALL</option>
+                                <option value="OPR-MONITOR" data-th-text="#{mon}"></option>
+                                <option value="OPR-SITE" data-th-text="#{mgt_site}"></option>
+                                <option value="OPR-MANAGER" data-th-text="#{mon_mgtt}"></option>
+                                <option value="OPR-COLLECT" data-th-text="#{data_colt}"></option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="searchField">
+                        <div class="label text-uppercase">
+                            <span data-th-text="#{log_lvl}"></span>:
+                        </div>
+                        <div class="select">
+                            <select class="field select-custom text-uppercase" id="searchLogLevel" style="margin-left:0" >
+                                <option value="">ALL</option>
+                                <option value="ERROR" class="text-uppercase" data-th-text="#{err}"></option>
+                                <option value="INFO" class="text-uppercase" data-th-text="#{info}"></option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div>
+                        <button class="mt-4 border-0 text-xs rounded px-3 btnSearch py-1" data-th-text="#{search}">
+                            Search
+                        </button>
+                        <button class="mt-4 border-0 text-xs rounded px-3 btnExport py-1" data-th-text="#{export}">
+                            Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!--Content-->
+            <div class="border form-content-page rounded-lg mt-3 wrapperTable">
+                <table class="table is-stripe display" id="tblSystemLog" style="width: 100%; text-align: center;">
+                    <thead>
+                    <tr>
+                        <th class="text-center text-uppercase border-top-0" data-th-text="#{seqno}" style="width: 5% !important;">SEQNO</th>
+                        <th class="text-center text-uppercase border-top-0" data-th-text="#{system}">System</th>
+                        <th class="text-center text-uppercase border-top-0" data-th-text="#{log_lvl}">Log Level</th>
+                        <th class="text-left text-uppercase border-top-0" data-th-text="#{log_data}">Log Data</th>
+                        <th class="text-left text-uppercase border-top-0" data-th-text="#{date}">Date</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </section>
+    <section aria-label="Modal Detail System Log">
+        <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-backdrop="static"
+             data-keyboard="false"
+             id="modalDetailSystemLog" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-centered-left modal-dialog-scrollable" style="min-width: 530px">
+                <div class="modal-content d-flex flex-row mr-auto" style="width: 50%">
+                    <div class="operationLogContent" style="width: 100%">
+                        <div class="">
+                            <div class="modal-body pb-1">
+                                <div class="font-weight-bold mb-4 d-flex justify-content-between">
+                                    <span data-th-text="#{opr_log_dt}">Operation Log Detail</span>
+                                    <div class="rightAction">
+                                        <button id="btnCloseX1" type="button" class="close" data-dismiss="modal" aria-label="Close" style="width: 24px ; display: flex; justify-items: center">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <form class="formModal" id="operationForm">
+                                    <div class="d-flex align-items-end mb-2">
+                                        <div class="formLabel" style="">
+                                            <div class="text-uppercase" data-th-text="#{log_id}" >Log Id</div>
+                                            <div class="text-capitalize" data-th-text="'('+ #{trans_id} + ')'">(Transaction Id)</div>
+                                        </div>
+                                        <input autocomplete="false" style="margin-bottom: 3px" class="formInput w-80pt" id="logIdValue" readonly />
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="formLabel" data-th-text="#{system}" style="">System</div>
+                                        <input autocomplete="false" class="formInput w-80pt" id="systemValue" readonly />
+                                    </div>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="formLabel" data-th-text="#{log_lvl}" style="">Log Level</div>
+                                        <input autocomplete="false" class="formInput w-80pt" id="logLevelValue" readonly />
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="formLabel" data-th-text="#{date}" style="">Date</div>
+                                        <input autocomplete="false" class="formInput w-80pt" id="dateValueData" readonly />
+                                    </div>
+                                    <div>
+                                        <div class="formLabel mb-2" data-th-text="#{log_data}" style="">Log Data</div>
+                                        <textarea class="formInput w-100" id="logDataValue"  readonly style="height: 100px; max-height: 150px; overflow-y: scroll; resize: vertical" > </textarea>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-body pt-0">
+                                <div class="font-weight-bold mb-2 text-uppercase">
+                                    <span data-th-text="#{rl_pro_l}">Relate Protocol Log</span>
+                                </div>
+                                <div class="position-relative"
+
+                                    style="height: 100px; overflow-y: scroll";
+                                >
+                                    <table id="tblRelateLog">
+                                        <thead class="position-sticky">
+                                            <tr>
+                                                <th data-th-text="#{seqno}"></th>
+                                                <th data-th-text="#{protocol_n}"></th>
+                                                <th data-th-text="#{result}"></th>
+                                                <th data-th-text="#{date}"></th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody id="relateDatalog">
+                                            <tr><td> </td><td> </td><td> </td><td> </td></tr>
+                                            <tr><td> </td><td> </td><td> </td><td> </td></tr>
+                                            <tr><td> </td><td> </td><td> </td><td> </td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary btn-sm font-weight-bold" data-dismiss="modal"
+                                        data-th-text="#{close}" id="btnCloseModal" type="button">Close
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="borderCenter" style="border: 1px solid black; height: 75%; margin: auto; display: none"></div>
+                    <div class="protocolLogContent" style="display: none; width: 49%">
+                        <div class="">
+                            <div class="modal-body">
+                                <div class="font-weight-bold mb-4 d-flex">
+                                    <span data-th-text="#{ptc_log_dt}">Protocol Log Detail</span>
+                                    <div class="rightAction">
+                                        <button class="btn btn-secondary ml-3 btn-sm text-uppercase font-weight-bold"
+                                                data-th-text="#{hide}" onclick="closeProtocolLog()" type="button">Hide
+                                        </button>
+                                    </div>
+                                    <div class="rightAction" style="position: absolute; right: 20px; top: 10px">
+                                        <button id="btnCloseX2" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true" onclick="onCloseModal();">&times;</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <form class="formModal" id="protocolForm">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="formLabel" style="">
+                                            <div class="text-uppercase" data-th-text="#{protocol_n}" >Protocol Name</div>
+                                        </div>
+                                        <input autocomplete="false" class="formInput w-80pt" id="protocolNameValue" readonly />
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="formLabel" data-th-text="#{result}" style="">Result</div>
+                                        <div class="w-80pt">
+                                            <input autocomplete="false" class="formInput w-100" id="resultValue" readonly />
+<!--                                            <p style="display: none" class="resend my-1 text-xs">Resend ...</p>-->
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="formLabel" data-th-text="#{date}" style="">Date</div>
+                                        <input autocomplete="false" class="formInput w-80pt" id="dateValue" readonly />
+                                    </div>
+                                    <div>
+                                        <div class="formLabel mb-2" data-th-text="#{req_data}" style="">Request Data</div>
+                                        <textarea class="formInput w-100" id="requestDataValue" readonly style=" resize: vertical; height: 100px; max-height: 150px; overflow-y: scroll" > </textarea>
+                                    </div>
+                                    <div>
+                                        <div class="formLabel mb-2" data-th-text="#{res_data}" style="">Log Data</div>
+                                        <textarea class="formInput w-100" id="resDataValue" readonly style="resize: vertical; height: 100px; max-height: 150px; overflow-y: scroll" > </textarea>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <section aria-label="Modal Export ">
+        <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-backdrop="static"
+             data-keyboard="false"
+             id="modalExport" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="min-width: 530px">
+                <div class="modal-content modal-content-log p-3">
+                    <div class="font-weight-bold mb-4 d-flex justify-content-between">
+                        <span data-th-text="#{export}" class="font-weight-bold bg-txt" >Export</span>
+                        <div class="rightAction">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="d-flex formModal justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <span class="text formLabel w-auto">Start Date</span>
+                            <div class="d-flex align-items-center  w-auto">
+                                <button class="btn btnCalendar">
+                                    <i class="far fa-calendar-alt"></i>
+                                </button>
+                                <input type="text" size="10" class="formInput w-auto" id="startDate" placeholder="yyyy/mm/dd" />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="text formLabel w-auto">End Date</span>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btnCalendar  w-auto">
+                                    <i class="far fa-calendar-alt"></i>
+                                </button>
+                                <input type="text" size="10" class="formInput w-auto" id="endDate" placeholder="yyyy/mm/dd" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btnExportTemp" class="d-none" type="button" ></button>
+                        <button id="btnSubmitExport" onclick="creatExport()" class="btn btn-success btn-sm text-uppercase font-weight-bold" type="button" data-th-text="#{download}" >Save</button>
+                        <button id="btnCloseModalExport" class="btn btn-secondary btn-sm font-weight-bold " data-dismiss="modal" type="button" data-th-text="#{close}" >Close</button>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+</th:block>
+<th:block layout:fragment="content_script">
+    <script th:src="@{/vendors/fileSaver/FileSaver.min.js}"></script>
+    <script th:src="@{/vendors/excelJs/exceljs.js}"></script>
+    <script th:src="@{/js/module/history/system-log.js}"></script>
+</th:block>
+</html>

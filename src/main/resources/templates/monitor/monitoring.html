@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html
+        layout:decorate="~{layout/defaultLayout}"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" th:href="@{/css/module/monitoring.css}"/>
+</head>
+<!-- page content -->
+<th:block layout:fragment="content_body">
+    <section class="content p-4">
+        <div class="text-sm mb-3 font-weight-medium">
+            <span data-th-text="#{cids_mon}"></span>
+            <span> › </span>
+            <span data-th-text="#{cids_montr}"></span>
+        </div>
+        <div class="border rounded px-4 py-3">
+            <!--Header Tabs-->
+            <div class="d-flex justify-content-between align-items-center headerBoard" style="border:none;">
+                <div class="d-flex">
+                    <button id="tabExport" class="border-0 btnTab active" data-th-text="#{export}" >Export</button>
+                    <button id="tabImport" class="border-0 btnTab" data-th-text="#{import}" >Import</button>
+                </div>
+                <div class="d-flex align-items-center statusAnnotate">
+                    <div class="d-flex align-items-center item active" >
+                        <div class="rounded box"></div>
+                        <span data-th-text="#{online}" >OnLine</span>
+                    </div>
+                    <div  class="d-flex align-items-center item" >
+                        <div class="rounded box offline"></div>
+                        <span data-th-text="#{offline}">
+                            Offline
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!--Content-->
+            <div style="border: 1px solid #EEF0F2; border-radius: 5px">
+                <p class="border-bottom ml-3 font-weight-bold mt-4" style="width: 98%" data-th-text="#{c_mon_s}" >CIDS Monitor Status</p>
+                <div class="stack-container">
+                    <div class="board">
+                        <div class="label"></div>
+                        <div class="list-monitor">
+
+                        </div>
+                        <div class="borderLine">
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section aria-label="Modal Detail">
+        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header" style="border: none;">
+                        <p class="modal-title font-weight-bold" id="staticBackdropLabel" data-th-text="#{c_mon_s}">CIDS Monitor Status</p>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary font-weight-bold" data-dismiss="modal" data-th-text="#{close}" style="width:90px; padding: 4px 12px; height: 28px;">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+<th:block layout:fragment="content_script">
+    <script th:src="@{/js/module/monitor/monitoring.js}"></script>
+</th:block>
+</html>
+<!-- /page content -->

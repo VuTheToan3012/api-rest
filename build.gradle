@@ -1,0 +1,125 @@
+buildscript {
+    repositories {
+        maven {
+            url = "https://home.urielsoft.co.kr:58081/repository/maven-public"
+            allowInsecureProtocol = true
+        }
+    }
+
+    dependencies {
+        classpath "io.freefair.gradle:lombok-plugin:6.6.3"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'war'
+    id 'org.springframework.boot' version '2.7.13'
+    id 'org.sonarqube' version '3.4.0.2513'
+    id 'io.freefair.lombok' version '8.1.0'
+}
+
+group 'com.urielsoft'
+version '1.0.0'
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "CIDSManagement"
+        property "sonar.projectName", "CIDSManagement"
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.host.url", "http://192.168.0.39:9050"
+        property "sonar.login", "78640ed813d1841b341630ffcdadf2a2b39cd53e"
+    }
+}
+
+ext {
+    springBootVersion = '2.7.13'
+    lombokVersion = '1.18.28'
+}
+
+repositories {
+    maven {
+        url = "https://home.urielsoft.co.kr:58081/repository/maven-public"
+        allowInsecureProtocol = true
+    }
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-log4j2:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-data-jdbc:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-security:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-cache:${springBootVersion}"
+
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.1'
+    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5', version: '3.0.5.RELEASE'
+
+    implementation group: 'javax.cache', name: 'cache-api', version: '1.1.1'
+    implementation group: 'org.ehcache', name: 'ehcache', version: '3.10.8'
+
+    implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '2.3.1'
+    implementation group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
+    implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '12.2.0.jre11'
+//    implementation group: 'com.h2database', name: 'h2', version: '2.1.214'
+
+    implementation group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.70'
+    implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.5'
+    implementation group: 'com.navercorp.lucy', name: 'lucy-xss-servlet', version: '2.0.1'
+
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.20.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.20.0'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-jul', version: '2.20.0'
+
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
+    implementation "org.springframework.boot:spring-boot-starter-tomcat:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    testImplementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter-test', version: '2.3.0'
+
+    // https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload
+    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+
+
+    implementation "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
+    implementation 'org.springframework.boot:spring-boot-starter-websocket:2.7.13'
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+}
+
+configurations.configureEach {
+    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task setProductionConfig() {
+    group = "other"
+    description = "Sets the environment for production mode"
+    doFirst {
+        /*
+           notice the file location ("./build/resources/main/application.properties"),
+           it refers to the file processed and already in the build folder, ready
+           to be packed, if you use a different folder from `build`, put yours
+           here
+        */
+        ant.propertyfile(file: "./build/resources/main/application.properties") {
+            entry(key: "spring.profiles.active", value: "local")
+        }
+    }
+    doLast {
+        // maybe put some notifications in console here
+    }
+}
+bootWar {
+    dependsOn setProductionConfig
+}

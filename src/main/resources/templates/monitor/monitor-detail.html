@@ -1,0 +1,39 @@
+
+    <section class="content bg-white">
+        <!-- /.card-header -->
+        <div class="monitor-detail-item" th:attr="monitor-seq=${monitorId}" style="display: none">
+            <div class="d-flex" style="gap: 20px; justify-content: space-between;margin-left: 15px;">
+                <div class="d-flex align-items-center" style="gap: 10px">
+                    <div class="font-weight-bold" data-th-text="#{location}" >Location</div>
+                    <div id="location-data" style="background-color: #f1f1f1; padding: 2px 8px; border-radius: 4px; font-weight: bold;"></div>
+                    <div id="monitor-name-data" style="background-color: #f1f1f1; padding: 2px 8px; border-radius: 4px; font-weight: bold;"></div>
+                </div>
+                <div class="d-flex align-items-center" style="gap: 10px">
+                    <div class="font-weight-bold" data-th-text="#{status}" style="margin-right: 30px;">Status</div>
+                    <div id="monitor-status-data" style="background-color: #f1f1f1; padding: 2px 8px; border-radius: 4px; font-weight: bold; width: 100px;" data-th-text="#{online}">Online</div>
+                    <div id="status-color" style="background-color: #00b44e; width: 35px; height: 27px; border-radius: 5px"></div>
+                </div>
+                <button class="btnSearch border-0 btn btn-secondary font-weight-bold"
+                        style="background-color: #558ED4; padding: 4px 12px; color: white; outline: none; border-radius: 5px; flex-shrink: 0; width: 90px;" data-th-text="#{search}" >
+                    Search
+                </button>
+            </div>
+            <!--                BreakLine-->
+            <hr style="border-top: 2px solid rgba(0,0,0,0.32); width: 90%;margin-top: 1.5rem; margin-bottom: 0.5rem;">
+            <div>
+                <div class="d-flex align-items-center" style="gap: 10px;">
+                    <div class="font-weight-bold" data-th-text="#{mon_pre}">
+                        CIDS Monitor Status
+                    </div>
+                    <button id="refreshBtn" class="border-0 font-weight-medium"
+                            style="background-color: #558ED4; padding: 2px 8px; color: white; outline: none; border-radius: 5px; width: 90px" data-th-text="#{refresh}">
+                        Refresh
+                    </button>
+                </div>
+                <div class="mt-4" style="width: 70%;  aspect-ratio: 16/9; margin: auto">
+                    <img id="screenshotData" style="width: 100%; height: 100%"/>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script th:src="@{/js/module/monitor/monitoring-detail.js}"></script>

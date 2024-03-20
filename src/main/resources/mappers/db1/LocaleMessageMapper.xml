@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.common.message.LocaleMessageMapper">
+
+	<!--
+	#############################################################################
+	# ### SELECT
+	#############################################################################
+	-->
+
+	<!--
+		Select All Locale Message Menu List
+	-->
+	<select id="selectAllLocaleMessageListMenu" resultType="com.urielsoft.cids.management.common.message.LocaleMessage">
+		<![CDATA[
+		SELECT TAG_ID AS MSG_KEY
+			 , 'en' AS MSG_LOCALE
+			 , MENU_NM_ENG AS MSG_CONTENT
+		FROM TB_MENUMNG
+		UNION ALL
+		SELECT TAG_ID AS MSG_KEY
+			 , 'bn' AS MSG_LOCALE
+			 , MENU_NM_BEN AS MSG_CONTENT
+		FROM TB_MENUMNG
+		UNION ALL
+		SELECT TAG_ID AS MSG_KEY
+			 , 'ko' AS MSG_LOCALE
+			 , MENU_NM_KOR AS MSG_CONTENT
+		FROM TB_MENUMNG
+		]]>
+	</select>
+
+
+	<!--
+		Select All Locale Message Item List
+	-->
+	<select id="selectAllLocaleMessageList" resultType="com.urielsoft.cids.management.common.message.LocaleMessage">
+		<![CDATA[
+		SELECT TAG_ID AS MSG_KEY
+			 , 'en' AS MSG_LOCALE
+			 , ITEM_NM_ENG AS MSG_CONTENT
+		FROM TB_ITEMMNG
+		UNION ALL
+		SELECT TAG_ID AS MSG_KEY
+			 , 'bn' AS MSG_LOCALE
+			 , ITEM_NM_BEN AS MSG_CONTENT
+		FROM TB_ITEMMNG
+		UNION ALL
+		SELECT TAG_ID AS MSG_KEY
+			 , 'ko' AS MSG_LOCALE
+			 , ITEM_NM_KOR AS MSG_CONTENT
+		FROM TB_ITEMMNG
+		]]>
+	</select>
+
+	<!--
+	#############################################################################
+	# ### INSERT
+	#############################################################################
+	-->
+
+	<!--
+	#############################################################################
+	# ### UPDATE
+	#############################################################################
+	-->
+
+	<!--
+	#############################################################################
+	# ### DELETE
+	#############################################################################
+	-->
+
+</mapper>

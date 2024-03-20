@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.common.security.SecurityMapper">
+
+	<!--
+	#############################################################################
+	# ### SELECT
+	#############################################################################
+	-->
+
+	<!--
+		Select User Info By UserId (UserId is username of spring security)
+	-->
+	<select id="selectUserInfoByUserId" resultType="com.urielsoft.cids.management.common.security.LoginUserDetails">
+	<![CDATA[
+		SELECT US.USER_ID AS userId
+			 ,US.USER_PW AS password
+			 ,US.USER_NM AS username
+			 ,AUTH.AUTH_TY_NM AS authTyNm
+		FROM TB_USERINFOMNG US
+				 JOIN TB_AUTHMNG AUTH
+					  ON US.AUTH_SEQ_NO = AUTH.SEQ_NO
+		WHERE US.USER_ID = #{userId}
+		]]>
+</select>
+
+
+	<!--
+	#############################################################################
+	# ### INSERT
+	#############################################################################
+	-->
+
+	<!--
+	#############################################################################
+	# ### UPDATE
+	#############################################################################
+	-->
+
+	<!--
+	#############################################################################
+	# ### DELETE
+	#############################################################################
+	-->
+
+</mapper>

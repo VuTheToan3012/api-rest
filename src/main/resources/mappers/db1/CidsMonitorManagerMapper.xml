@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.CidsMonitorManagerMapper">
+
+	<!--
+		Select CidsMonitorManager Data All List
+	-->
+	<select id="selectCidsMonitorManagerDataAllList" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsMonitorManagerDTO">
+
+		<![CDATA[
+			SELECT MON.*
+				 , TP.TMPLAT_NM
+				 , US.USER_NM
+			FROM TB_CIDSMONMNG MON
+				LEFT JOIN TB_TMPLATMNG TP
+				    ON MON.TMPLAT_SEQ_NO = TP.SEQ_NO
+				LEFT JOIN TB_USERINFOMNG US
+				    ON MON.MDFY_USER_SEQ_NO = US.SEQ_NO
+			ORDER BY MON.USAGE desc
+		]]>
+	</select>
+
+	<!--
+		Select CidsMonitorManager Data by seq
+	-->
+	<select id="selectCidsMonitorManagerDataBySeq" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsMonitorManagerDTO">
+		<![CDATA[
+			SELECT MON.*
+				 , TP.TMPLAT_NM
+				 , US.USER_NM
+			FROM TB_CIDSMONMNG MON
+				LEFT JOIN TB_TMPLATMNG TP
+				    ON MON.TMPLAT_SEQ_NO = TP.SEQ_NO
+				LEFT JOIN TB_USERINFOMNG US
+				    ON MON.MDFY_USER_SEQ_NO = US.SEQ_NO
+			WHERE MON.SEQ_NO = #{cidsMonitorManagerSeq}
+		]]>
+	</select>
+
+	<!--
+		Insert New CidsMonitorManager Data
+	-->
+	<insert id="insertCidsMonitorManagerData" parameterType="com.urielsoft.cids.management.biz.dto.CreateCidsMonitorManagerDTO">
+		<selectKey resultType="int" order="AFTER" keyProperty="seqNo">
+			SELECT @@IDENTITY as seqNo
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TB_CIDSMONMNG 	( MON_NM, MON_CMS_NM
+										, WK_TY_NM, WK_TY_SEQ_NO
+										, LOC_NM, LOC_TY_SEQ_NO
+										, TMPLAT_SEQ_NO, USAGE
+										, IP, NOTE, REG_DT
+										, MDFY_DT, MDFY_USER_SEQ_NO )
+			VALUES (
+			        #{monNm}
+			        , #{monCmsNm}
+			        , (SELECT WK.WK_TY_NM
+			           FROM TB_WKTYMNG WK
+			           WHERE SEQ_NO = #{wkTySeqNo})
+			        , #{wkTySeqNo}
+			        , (SELECT LO.LOC_NM
+			           FROM TB_LOCTYMNG LO
+			           WHERE SEQ_NO = #{locTySeqNo})
+					, #{locTySeqNo}
+					, (SELECT MONTM.TMPLAT_SEQ_NO
+					   FROM TB_MONTMPLATMNG MONTM
+					   WHERE #{wkTySeqNo} = MONTM.WK_TY_SEQ_NO
+					   	AND #{locTySeqNo} = MONTM.LOC_TY_SEQ_NO )
+					, #{usage}
+					, #{ip}
+					, #{note}
+					, GETDATE()
+					, GETDATE()
+					, #{mdfyUserSeqNo} )
+		]]>
+	</insert>
+
+	<!--
+		Update CidsMonitorManager Data
+	-->
+	<update id="updateCidsMonitorManagerData" parameterType="com.urielsoft.cids.management.biz.dto.UpdateCidsMonitorManagerDTO">
+		<![CDATA[
+			UPDATE TB_CIDSMONMNG
+				SET MON_NM           = #{monNm},
+					MON_CMS_NM       = #{monCmsNm},
+					WK_TY_NM         = (SELECT WK.WK_TY_NM
+										FROM TB_WKTYMNG WK
+										WHERE SEQ_NO = #{wkTySeqNo}),
+					WK_TY_SEQ_NO     = #{wkTySeqNo},
+					LOC_NM           = (SELECT LO.LOC_NM
+										FROM TB_LOCTYMNG LO
+										WHERE SEQ_NO = #{locTySeqNo}) ,
+					LOC_TY_SEQ_NO    = #{locTySeqNo},
+					TMPLAT_SEQ_NO    = (SELECT MONTM.TMPLAT_SEQ_NO
+										FROM TB_MONTMPLATMNG MONTM
+										WHERE #{wkTySeqNo} = MONTM.WK_TY_SEQ_NO
+										  AND #{locTySeqNo} = MONTM.LOC_TY_SEQ_NO ),
+					USAGE            = #{usage},
+					IP               = #{ip},
+					NOTE             = #{note},
+					MDFY_USER_SEQ_NO = #{mdfyUserSeqNo},
+					MDFY_DT          = GETDATE()
+			WHERE SEQ_NO = #{seqNo}
+		]]>
+	</update>
+
+	<!--
+		Delete CidsMonitorManager Data
+	-->
+	<delete id="deleteCidsMonitorManagerDataBySeq">
+		<![CDATA[
+			DELETE FROM TB_CIDSMONMNG
+			WHERE SEQ_NO = #{cidsMonitorManagerSeq}
+		]]>
+	</delete>
+
+	<!--
+		Select CidsMonitorManager Data by Monitor Name
+	-->
+	<select id="selectCidsMonitorManagerDataByMonitorName" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsMonitorManagerDTO">
+		<![CDATA[
+			SELECT MON.MON_NM
+			FROM TB_CIDSMONMNG MON
+			WHERE MON.MON_NM = #{monNm}
+				AND MON.WK_TY_SEQ_NO = #{wkTySeqNo}
+				AND MON.LOC_TY_SEQ_NO = #{locTySeqNo}
+		]]>
+	</select>
+
+	<!--
+		Select CidsMonitorManager Data By Ip
+	-->
+	<select id="selectCidsMonitorManagerDataByIp" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsMonitorManagerDTO">
+		<![CDATA[
+			SELECT MON.IP
+			FROM TB_CIDSMONMNG MON
+			WHERE MON.IP = #{cidsMonitorManagerIp}
+		]]>
+	</select>
+
+	<!--
+		Select CidsMonitorManager Data By Location Name
+	-->
+	<select id="selectCidsMonitorManagerDataByLocNm" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsMonitorManagerDTO">
+		<![CDATA[
+			SELECT MON.LOC_NM
+			FROM TB_CIDSMONMNG MON
+			WHERE MON.LOC_NM = #{cidsMonitorManagerLocNm}
+		]]>
+	</select>
+
+	<!--
+		Select CidsMonitorManager Data By Monitor CMS Name
+	-->
+	<select id="selectCidsMonitorManagerDataByMonCmsNm" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsMonitorManagerDTO">
+		<![CDATA[
+			SELECT MON.MON_CMS_NM
+			FROM TB_CIDSMONMNG MON
+			WHERE MON.MON_CMS_NM = #{monCmsNm}
+			  AND MON.WK_TY_SEQ_NO = #{wkTySeqNo}
+			  AND MON.LOC_TY_SEQ_NO = #{locTySeqNo}
+		]]>
+	</select>
+
+</mapper>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html
+        layout:decorate="~{layout/defaultLayout}"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org">
+<!-- page content -->
+<th:block layout:fragment="title">
+    <title data-th-text="#{ali_mng}"></title>
+</th:block>
+<th:block layout:fragment="content_body">
+    <section class="content p-4">
+        <div class="text-sm mb-3 font-weight-medium" data-th-text="#{ali_mng}"></div>
+        <div class="">
+            <div class="border px-3 pt-3 pb-2 rounded-lg d-flex justify-content-between align-items-end" >
+                <div class="d-flex align-items-center headerFilter">
+                    <div class="searchField">
+                        <div class="label text-uppercase">
+                            <span data-th-text="#{al_nm}"></span>:
+                        </div>
+                        <input class="field" id="searchAirlineName"/>
+                    </div>
+                    <div class="searchField">
+                        <div class="label text-uppercase">
+                            <span data-th-text="#{iata2l}"></span>:
+                        </div>
+
+                        <input class="field" id="searchIATA2Letter" maxlength="2"/>
+                    </div>
+                    <div class="searchField">
+                        <div class="label text-uppercase">
+                            <span data-th-text="#{iata3d}"></span>:
+                        </div>
+                        <input class="field" id="searchIATA3Digit" maxlength="3"
+                               oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                               type="text"/>
+                    </div>
+                    <div class="searchField">
+                        <div class="label text-uppercase">
+                            <span data-th-text="#{icaocode}"></span>:
+                        </div>
+                        <input class="field" id="searchIcaoCode" maxlength="3"/>
+                    </div>
+                    <div class="d-flex justify-center align-items-center">
+                        <button class="mt-4 border-0 text-xs rounded px-3 btnSearch py-1" id="btnSearch" style="width: 7em;" data-th-text="#{search}">
+                            Search
+                        </button>
+                        <div class="mt-4 btnExport ml-2">
+                            <button class="py-1 border-0 text-xs rounded px-3 btnSearch btnExportExcel" onclick="exportDataToExcel([{ index: 5, order: 'desc' }], {0: 10, 1: 30,6:30}, $('#tblAirline'), 'Airline_Manager_')" id="btnExportExcel" style="width: 7em;" data-th-text="#{export}">Export</button>
+                        </div>
+                    </div>
+                </div>
+                <button class=" border-0 bg-red text-white rounded py-1 text-xs font-weight-bold"
+                        data-th-text="#{new_al}" onclick="showModal('add')"
+                        style="padding: 0px 50px; background-color: #FD443D !important;">New
+                    Airline
+                </button>
+            </div>
+            <!--Content-->
+            <div class="border form-content-page rounded-lg mt-3 wrapperTable">
+                <table class="table is-stripe display" id="tblAirline" style="width: 100%; text-align: center;">
+                    <thead>
+                    <tr>
+                        <th class="text-center text-uppercase border-top-0" style="width: 5% !important;" data-th-text="#{seqno}">SEQNO</th>
+                        <th class="text-left border-top-0" style="width: 13.5% !important;" data-th-text="#{al_nm}">Airline Name</th>
+                        <th class="text-left text-uppercase border-top-0"  style="width: 13.5% !important;"data-th-text="#{iata2l}">IATA 2 LETTER</th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 13.5% !important;" data-th-text="#{iata3d}">IATA 3DIGIT</th>
+                        <th class="text-center text-uppercase border-top-0" style="width:13.5% !important;" data-th-text="#{icaocode}">ICAO CODE</th>
+                        <th class="text-center text-uppercase border-top-0" style="width: 13.5% !important;" data-th-text="#{usage}">USAGE</th>
+                        <th class="text-left text-uppercase border-top-0"  style="width: 14% !important;"data-th-text="#{mod_date}">Modify Date</th>
+                        <th class="text-left text-uppercase border-top-0"  style="width: 13.5% !important;"data-th-text="#{editor}">Editor</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </section>
+    <!--    Modal airline info-->
+    <section aria-label="Modal Airline">
+        <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-backdrop="static"
+             data-keyboard="false"
+             id="modalAirlineInfo" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="min-width: 550px">
+                <form class="w-100" id="form">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="font-weight-bold mb-4 d-flex justify-content-between">
+                                <span data-th-text="#{al_info}" class="font-weight-bold bg-txt">Airline Information</span>
+                                <div class="rightAction">
+
+                                </div>
+                            </div>
+                            <div class="formModal">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="formLabel text-capitalize" data-th-text="#{al_nm}" style="">Airline Name</div>
+                                    <input style="width: 45%;color: #6e6864;" autocomplete="false"  class="formInput font-weight-bold" id="airlineName"/>
+                                </div>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="formLabel text-uppercase" data-th-text="#{iata2l}" style="">IATA
+                                        2LETTER
+                                    </div>
+                                    <input style="width: 45%;color: #6e6864;" class="formInput font-weight-bold text-uppercase" id="iata2Letter" maxlength="2"/>
+                                    <button class="ml-auto text-uppercase btn btn-xs text-white text-xs px-4 font-weight-bold"
+                                            data-th-text="#{dup_chk}"
+                                            id="duplicateCheckBtnIata2Letter"
+                                            style="background-color: #558ED4"
+                                            type="button"> Duplicate Check
+                                    </button>
+                                </div>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="formLabel text-uppercase" data-th-text="#{iata3d}" style="">IATA
+                                        3DIGIT
+                                    </div>
+                                    <input style="width: 45%;color: #6e6864;" class="formInput font-weight-bold" id="iata3Digit" maxlength="3"
+                                           oninput="this.value=this.value.replace(/[^0-9]/g,'');" type="text"/>
+                                    <button class="ml-auto text-uppercase btn btn-xs text-white text-xs px-4 font-weight-bold"
+                                            data-th-text="#{dup_chk}"
+                                            id="duplicateCheckBtnIata3Digit"
+                                            style="background-color: #558ED4" type="button"> Duplicate Check
+                                    </button>
+                                </div>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="formLabel" data-th-text="#{icaocode}" style="">ICAO Code</div>
+                                    <input style="width: 45%;color: #6e6864;" autocomplete="false" class="formInput font-weight-bold text-uppercase" id="icaoCode" maxlength="3"/>
+                                    <button class="ml-auto text-uppercase btn btn-xs text-white text-xs px-4 font-weight-bold"
+                                            data-th-text="#{dup_chk}"
+                                            id="duplicateCheckBtn"
+                                            style="background-color: #558ED4" type="button"> Duplicate Check
+                                    </button>
+                                </div>
+                                <div class="d-flex align-items-center mb-3 ">
+                                    <div class="formLabel" data-th-text="#{usage}" style="">USAGE</div>
+                                    <div class="select">
+                                        <select class="formInput select-custom font-weight-bold" id="usage" style="width:8em;color: #6e6864;">
+                                            <option class="font-weight-bold" value="1">Y</option>
+                                            <option class="font-weight-bold" value="0">N</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="d-flex w-50 align-items-center">
+                                        <div class="formLabel w-40 text-uppercase" data-th-text="#{logo}"
+                                             style="width: 40%">LOGO
+                                        </div>
+                                        <button class=" text-uppercase w-50 btn btn-xs text-white text-xs px-4 font-weight-bold"
+                                                data-th-text="#{search}"
+                                                id="uploadLogo"
+                                                style="background-color: #558ED4" type="button">SEARCH
+                                        </button>
+                                        <input accept="image/png, image/jpeg" class="d-none" id="inputFile"
+                                               type="file"/>
+                                    </div>
+                                    <div class="font-weight-bold text-center w-50 text-sm" style="color: #6e6864" data-th-text="#{vlogo_txt}">
+                                        MAXSIZE 260*70 PNG,JPEG ONLY
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="formLabel text-capitalize" data-th-text="#{preview}" style="">Preview</div>
+                                    <div class="mt-3 m-auto" style="width:260px; height: 70px">
+                                        <img class="w-100 object-fit-contain d-flex justify-content-center" style="max-height: 70px"  id="airlineLogo" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-success btn-sm text-uppercase font-weight-bold" data-th-text="#{save}"
+                                    id="btnSubmit" type="button">Save
+                            </button>
+                            <button class="btn btn-secondary btn-sm  font-weight-bold"
+                                    data-dismiss="modal"
+                                    data-th-text="#{close}" id="btnCloseModal" type="button">Close
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+<th:block layout:fragment="content_script">
+    <script th:src="@{/vendors/fileSaver/FileSaver.min.js}"></script>
+    <script th:src="@{/vendors/excelJs/exceljs.js}"></script>
+    <script th:src="@{/js/module/airline-manager.js}"></script>
+</th:block>
+</html>

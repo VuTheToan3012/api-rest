@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CIDS Management Login Page</title>
+
+    <link th:href="@{/css/common.css}" rel="stylesheet"/>
+    <link th:href="@{/css/login.css}" rel="stylesheet"/>
+</head>
+<body>
+<div class="wrap">
+    <div class="wrap_login">
+        <div class="login_box">
+            <div class="titlebox">
+                <img src="/images/login.png"/>
+                <h1 class="logo">
+                    <span class="title">Cargo Information Display System Management</span>
+                </h1>
+            </div>
+            <form id="loginPost" th:action="@{/loginProc}" method="post">
+                <div class="conBox">
+                    <ul>
+                        <li>
+                            <label for="username" class="log_id blind">
+                                <span class="blind">UserId</span>
+                            </label>
+                            <input type="text" class="userID" placeholder="User ID" id="username" name="username">
+                        </li>
+                        <li>
+                            <label for="password" class="log_pw blind">
+                                <span class="blind">Password</span>
+                            </label>
+                            <input type="password" class="userID" placeholder="Password" id="password" name="password">
+                        </li>
+                        <li class="language">
+                            <div class="font-weight-bold" style="margin-left: 5px;">Language</div>
+                            <div class="select" style="width: 16em; padding: 2px">
+                                <select id="language-select" name="lang" class="select-custom" style="border: 2px; border-radius: 3px">
+                                    <option value="en" >English</option>
+                                    <option value="bn" >Bengali</option>
+                                </select>
+                            </div>
+                        </li>
+
+                        <li class="loginBtn">
+                            <input class="submit btnLogin" id="btnLogin" type="submit" value="LOGIN">
+                        </li>
+                    </ul>
+                    <div class="msg" th:if="${param.error}">
+                        <span th:text="${param.exception}"></span>
+                    </div>
+                    <div class="msg" th:if="${param.logout}">
+                        You have been logged out.
+                    </div>
+                </div>
+            </form>
+
+            <div class="logoUriel w-100">
+                <img src="/images/logo.svg"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/vendors/jquery/jquery-3.7.0.min.js}"></script>
+<script th:src="@{/vendors/jquery/jquery.cookie.js}"></script>
+<script th:src="@{/vendors/i18next/i18next.min.js}"></script>
+<script th:src="@{/vendors/i18next/jquery-i18next.min.js}"></script>
+<script th:src="@{/js/main.js}" type="module"></script>
+<script th:src="@{/js/common.js}"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+
+.dropdown-menu {
+    min-width: 11rem !important;
+}
+
+.subMenuItem {
+    display: block;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 0 1rem;
+    color: rgba(0,0,0,.5);
+}
+
+.subMenuItem:hover, .subMenuItem.active{
+    color: rgba(0,0,0,.9);
+}

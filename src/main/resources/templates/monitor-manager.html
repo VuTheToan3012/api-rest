@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html
+        layout:decorate="~{layout/defaultLayout}"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="addtional_css">
+    <link rel="stylesheet" th:href="@{/css/module/monitor-management.css}"/>
+</th:block>
+<th:block layout:fragment="title">
+    <title data-th-text="#{cids_monmg}"></title>
+</th:block>
+<!-- page content -->
+<th:block layout:fragment="content_body">
+    <section class="content p-4">
+        <div class="text-sm mb-3 font-weight-medium" data-th-text="#{cids_monmg}"></div>
+        <div class="">
+            <div class="border px-3 pt-3 pb-2 rounded-lg d-flex justify-content-between align-items-end">
+                <div class="d-flex align-items-center headerFilter">
+                    <div class="searchField">
+                        <div class="label" data-th-text="#{type:}">
+                            TYPE
+                        </div>
+                        <div class="select">
+                            <select class="field select-custom text-uppercase" id="searchType" style="width: 5.5em; " >
+                                <option value="">ALL</option>
+                                <option value="1">Export</option>
+                                <option value="2">Import</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="searchField">
+                        <div class="label" data-th-text="#{location:}" >
+                            LOCATION:
+                        </div>
+                        <div class="select">
+                            <select class="field select-custom text-uppercase" id="searchLocation"  style="width: 9em;">
+                                <option value="">ALL</option>
+                                <option value="1">Truck</option>
+                                <option value="2">Security</option>
+                                <option value="6">Customs</option>
+                                <option value="3">Exit MHS</option>
+                                <option value="4">Enter MHS</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="searchField">
+                        <div class="label" data-th-text="#{mon_nm:}" >
+                            MONITOR NAME:
+                        </div>
+                        <input class="field" id="searchMonitorName" style="height: 26px;" />
+                    </div>
+                    <div class="d-flex justify-center align-items-center">
+                        <button class="mt-4 py-1 border-0 text-xs rounded px-3 btnSearch" id="btnSearch" data-th-text="#{search}" style="width: 7em;">Search</button>
+                        <div class="mt-4 btnExport ml-2">
+                            <button class="py-1 border-0 text-xs rounded px-3 btnSearch btnExportExcel" onclick="exportDataToExcel([{ index: 0, order: 'asc' }, { index: 3, order: 'asc' }, { index: 6, order: 'desc' }], {0: 10, 1: 30, 2: 30, 3: 30}, $('#tblMonitor'), 'CIDS_Monitor_Manager_')" id="btnExportExcel" style="width: 7em;" data-th-text="#{export}">Export</button>
+                        </div>
+                    </div>
+
+                </div>
+                <button class="btnAddUser border-0 bg-red text-white rounded py-1 text-xs font-weight-bold" style="padding: 0px 50px; background-color: #FD443D !important; " onclick="showModal('add')" data-th-text="#{new_mon}" >New Monitor</button>
+            </div>
+
+            <!--Content-->
+            <div class="border form-content-page rounded-lg mt-3 wrapperTable">
+                <table class="table is-stripe display" id="tblMonitor" style="width: 100%; text-align: center;">
+                    <thead>
+                    <tr>
+                        <th class="text-center text-uppercase border-top-0" style="width: 5%;" data-th-text="#{type}">Type</th>
+                        <th class="text-left text-uppercase border-top-0 pl-30" style="width: 17%;" data-th-text="#{mon_nm}" >Monitor Name</th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 17%;" data-th-text="#{loc_chs}">Location Name(CHS)</th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 14%;" data-th-text="#{location}">Location</th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 10%;" data-th-text="#{network}">Network</th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 5%;" data-th-text="#{template}">Template</th>
+                        <th class="text-center text-uppercase border-top-0" style="width: 12%;" data-th-text="#{usage}">Usage</th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 10%;" data-th-text="#{mod_date}">Modify Date</th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 10%;" data-th-text="#{editor}">Editor</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </section>
+    <section aria-label="Modal Monitor">
+        <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-keyboard="false"
+             id="modalMonitorInfo" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="min-width: 630px">
+                <form id="form">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="font-weight-bold mb-4 d-flex justify-content-between">
+                                <span data-th-text="#{mon_info}" class="font-weight-bold bg-txt">CIDS Monitor Information</span>
+                                <div class="rightAction" >
+                                </div>
+
+                            </div>
+                            <div class="formModal">
+                                <div class="d-flex align-items-center mb-3 ">
+                                    <div class="formLabel" style="" data-th-text="#{type}" >Type</div>
+                                    <div class="select">
+                                        <select class="formInput select-custom text-uppercase font-weight-bold" id="type" style="width:10em; font-size: 14px;color: #6e6864;" >
+                                            <option value="1" class="font-weight-bold" >EXPORT</option>
+                                            <option value="2" class="font-weight-bold">IMPORT</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="d-flex align-items-center w-50 ">
+                                        <div class="formLabel" style="width: 40%;" data-th-text="#{location}" >Location</div>
+                                       <div class="select">
+                                           <select class="formInput  select-custom font-weight-bold " style="width: 10em; font-size: 14px; text-transform: uppercase;color: #6e6864;" id="location" >
+                                               <option class="font-weight-bold" value="1" >TRUCK</option>
+                                               <option class="font-weight-bold" value="2" >SECURITY</option>
+                                               <option class="font-weight-bold" value="3" >EXIT MHS</option>
+                                               <option class="font-weight-bold" value="4" >ENTER MHS</option>
+                                           </select>
+                                       </div>
+                                    </div>
+                                    <div class="d-flex align-items-center w-50 templateGroup " style="justify-content: space-between">
+                                        <div class="formLabel" style="width: 30%; margin-left:50px;" data-th-text="#{template}" >Template</div>
+                                        <div class="formInput select-custom font-weight-bold text-uppercase" style="width: 9em; font-size: 14px; height: 30px; text-align: left; padding-top: 4px;color: #6e6864;" id="template" ></div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-2 " >
+                                    <div class="formLabel" style="" data-th-text="#{loca_name}" >Location Name(CHS)</div>
+                                    <input class="formInput font-weight-bold" id="locationName" style="width: 35%; flex:1; height: 30px; font-size: 14px;color: #6e6864;"  autocomplete="false" />
+                                    <button type="button" id="duplicateCheckLocNameBtn" class="ml-3 text-uppercase btn btn-xs text-white text-xs px-4 font-weight-bold" style="background-color: #558ED4; height: 30px"  data-th-text="#{dup_chk}"> Duplicate Check</button>
+                                </div>
+                                <div class="d-flex align-items-center mb-2" >
+                                    <div class="formLabel" style=""  data-th-text="#{mon_nm}" >Monitor Name</div>
+                                    <input class="formInput font-weight-bold" id="monitorName" style="width: 35%; flex: 1; height: 30px; font-size: 14px;color: #6e6864;" autocomplete="false" />
+                                    <button type="button" id="duplicateCheckNameBtn" class="ml-3 text-uppercase btn btn-xs text-white text-xs px-4 font-weight-bold" style="background-color: #558ED4; height: 30px"  data-th-text="#{dup_chk}"> Duplicate Check</button>
+                                </div>
+                                <div class="d-flex align-items-center mb-3" >
+                                    <div class="formLabel" style="" ><span  data-th-text="#{network}"></span>(IP)</div>
+                                    <input class="formInput font-weight-bold" id="networkIp" placeholder="xxx.xxx.xxx.xxx" style="width: 35%; flex: 1; height: 30px; font-size: 14px;color: #6e6864;" autocomplete="false" />
+                                    <button type="button" id="duplicateCheckIPBtn" class="ml-3 text-uppercase btn btn-xs text-white text-xs px-4 font-weight-bold" style="background-color: #558ED4; height: 30px"  data-th-text="#{dup_chk}"> Duplicate Check</button>
+                                </div>
+
+                                <div class="d-flex align-items-center mb-2 " >
+                                    <div class="formLabel" style=""  data-th-text="#{usage}">USAGE</div>
+                                    <div class="select">
+                                        <select class="formInput select-custom font-weight-bold" id="usage" style="width: 10em; font-size: 14px;color: #6e6864;">
+                                            <option value="" class="font-weight-bold">Y or N</option>
+                                            <option value="1" class="font-weight-bold">Y</option>
+                                            <option value="0" class="font-weight-bold">N</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="d-flex flex-column mb-2">
+                                    <div class="formLabel mb-2 text-capitalize" style=""  data-th-text="#{note}">Note</div>
+                                    <textarea id="note" class="formInput p-2 font-weight-bold" style=" width: 100%;color: #6e6864;resize: none;" rows="3" th:placeholder="#{mon_if_n}"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="padding-top: 0;">
+                            <button id="btnSubmit" class="btn btn-success btn-sm text-uppercase font-weight-bold" type="button"  data-th-text="#{save}" >Save</button>
+                            <button id="btnCloseModal" class="btn btn-secondary btn-sm font-weight-bold" data-dismiss="modal" type="button"  data-th-text="#{close}">Close</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+<th:block layout:fragment="content_script">
+    <script th:src="@{/vendors/inputmask/jquery.inputmask.bundle.js}"></script>
+    <script th:src="@{/vendors/fileSaver/FileSaver.min.js}"></script>
+    <script th:src="@{/vendors/excelJs/exceljs.js}"></script>
+    <script th:src="@{/js/module/monitor-management.js}"></script>
+</th:block>
+</html>

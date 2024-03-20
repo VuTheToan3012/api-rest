@@ -1,0 +1,13 @@
+.operationLogContent .formInput{
+    color: #6D6D6D;
+    font-size: 14px;
+    line-height: 26px;
+}
+
+.btnExport{
+    background-color: #8596B0;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 12px !important;
+}

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html
+        layout:decorate="~{layout/defaultLayout}"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org">
+
+<head>
+</head>
+<!-- page content -->
+<th:block layout:fragment="content_body">
+    <section class="content p-4">
+        <div class="text-sm mb-3 font-weight-medium">
+            <span data-th-text="#{cids_mon}"></span>
+            <span> › </span>
+            <span data-th-text="#{cids_moncf}"></span>
+        </div>
+        <div class="">
+            <div class="border px-3 pt-3 pb-2 rounded-lg d-flex justify-content-between align-items-end" >
+                <div class="d-flex align-items-center headerFilter">
+                    <div class="searchField">
+                        <div class="label" data-th-text="#{type:}">
+
+                            TYPE:
+                        </div>
+                        <div class="select">
+                            <select class="field select-custom text-uppercase" id="searchType" style="width: 5.5em">
+                                <option value="">ALL</option>
+                                <option value="1">
+                                    EXPORT
+                                </option>
+                                <option value="2">
+                                    IMPORT
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="searchField">
+                        <div class="label"
+                             data-th-text="#{location:}"
+                        >
+                            LOCATION:
+                        </div>
+                        <div class="select">
+                            <select class="field select-custom text-uppercase" id="searchLocation" style="width: 9em">
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="searchField">
+                        <div class="label" data-th-text="#{template:}">
+                            TEMPLATE:
+                        </div>
+                        <div class="select">
+                            <select class="field select-custom" id="searchTemplate" style="width: 6em">
+                                <option value="">ALL</option>
+                                <option value="1">TYPE #1</option>
+                                <option value="2">TYPE #2</option>
+                                <option value="3">TYPE #3</option>
+                                <option value="4">TYPE #4</option>
+                                <option value="5">TYPE #5</option>
+                                <option value="6">TYPE #6</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div>
+                        <button class="mt-4 border-0 text-xs rounded py-1 px-3 btnSearch" data-th-text="#{search}"
+                                type="button" style="width: 7em">
+                            Search
+                        </button>
+                    </div>
+                </div>
+                <button class=" border-0 bg-red text-white rounded py-1 text-xs font-weight-bold"
+                        data-th-text="#{adv_mgt}"
+                        onclick="showModalAdvertisement()"
+                        style="padding: 0px 10px; background-color: #FD443D !important;"
+                >
+                    Advertising management
+                </button>
+            </div>
+            <div class="border form-content-page rounded-lg mt-3 wrapperTable">
+                <table class="table is-stripe display" id="tblMonitorConfiguration"
+                       style="width: 100%; text-align: center;">
+                    <thead>
+                    <tr>
+                        <th class="text-center text-uppercase border-top-0" style="width: 5%;" data-th-text="#{type}">
+                            Type
+                        </th>
+                        <th class="text-left text-uppercase border-top-0 pl-161" style="width: 30%;" data-th-text="#{location}">
+                            Location
+                        </th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 30%;" data-th-text="#{template}">
+                            Template
+                        </th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 20%;" data-th-text="#{mod_date}">
+                            Modify Date
+                        </th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 15%;" data-th-text="#{editor}">
+                            Editor
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </section>
+    <!--    Modal monitor config     -->
+    <section aria-label="Modal monitor">
+        <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-backdrop="static"
+             data-keyboard="false"
+             id="modalMonitorConfig" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                <form class="w-100" id="form">
+                    <section class="modal-content bg-white">
+                        <div class="modal-body" style=" font-weight: bold; color: #5f5f5f">
+                            <div class="monitor-detail-item">
+                                <div class="font-weight-bold mb-3" >
+                                    <span data-th-text="#{mon_t_inf}">CIDS Monitor Template Information</span>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex" style="gap: 20px">
+                                        <div class="d-flex align-items-center" style="gap: 10px">
+                                            <div class="font-weight-bold" style="margin-left: 15px;" data-th-text="#{location}">
+                                                Location
+                                            </div>
+                                            <div id="locationData" style="background-color: #f1f1f1;
+                                                padding: 2px 8px;
+                                                border-radius: 4px;">
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center" style="gap: 10px">
+                                            <div class="font-weight-bold" data-th-text="#{cur_tmpl}">
+                                                Current Template
+                                            </div>
+                                            <div id="current_template" style="background-color: #f1f1f1;
+                                                padding: 2px 8px;
+                                                border-radius: 4px;">
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center" style="gap: 10px">
+                                            <div class="font-weight-bold" data-th-text="#{chg_tmpl}">
+                                                Change Template
+                                            </div>
+                                            <div class="select">
+                                                <select class="select-custom" id="templateData" style="background-color: #f1f1f1;
+                                                padding: 2px 8px;
+                                                border-radius: 4px; width: 6em; font-weight: bold; color: #6e6864">
+                                                    <option value="0" style="font-weight: bold; color:#6e6864 ">SELECT</option>
+                                                    <option value="1" style="font-weight: bold; color:#6e6864 ">TYPE #1</option>
+                                                    <option value="2" style="font-weight: bold; color:#6e6864 ">TYPE #2</option>
+                                                    <option value="3" style="font-weight: bold; color:#6e6864 ">TYPE #3</option>
+                                                    <option value="4" style="font-weight: bold; color:#6e6864 ">TYPE #4</option>
+                                                    <option value="5" style="font-weight: bold; color:#6e6864 ">TYPE #5</option>
+                                                    <option value="6" style="font-weight: bold; color:#6e6864 ">TYPE #6</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+<!--                                    <button-->
+<!--                                            class="border-0"-->
+<!--                                            data-th-text="#{appy_upper}"-->
+<!--                                            id="btnApply"-->
+<!--                                            style="background-color: #558ED4; color: white; outline: none; border-radius: 0.2rem ;width: 5em; font-weight: bold"-->
+<!--                                            type="button"-->
+<!--                                    >-->
+<!--                                        Apply-->
+<!--                                    </button>-->
+                                </div>
+                                <!--                BreakLine               -->
+                                <hr style="margin-top: 30px; border-top: 2px solid rgba(0,0,0,0.32);width: 90%;">
+                                <div>
+                                    <div class="d-flex align-items-center" style="gap: 10px;">
+
+                                        <div class="font-weight-bold" data-th-text="#{mon_pre}">
+                                            CIDS Monitor Preview
+                                        </div>
+                                    </div>
+                                    <div class="mt-4"
+                                         style="width: 70%; border: 1px solid #adaaa8; margin: auto;border-radius: 0.2rem">
+                                        <img style="object-fit: cover" id="previewImage" width="100%"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-success btn-sm text-uppercase font-weight-bold"
+                                    data-th-text="#{save}"
+                                    id="btnSubmitConfig" type="button"
+                                    style="width: 7em"
+                            >
+                                Save
+                            </button>
+                            <button class="btn btn-secondary btn-sm  font-weight-bold"
+                                    data-dismiss="modal"
+                                    data-th-text="#{close}"
+                                    id="btnCloseModalConfig" type="button"
+                                    style="text-transform: none; width: 7em"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </section>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!--    Modal Advertisement manager     -->
+    <section aria-label="Modal Advertisement">
+        <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-backdrop="static"
+             data-keyboard="false"
+             id="modalAdvertisement" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="min-width: 630px">
+                <form class="w-100" id="formAdvertisement">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="font-weight-bold mb-4 d-flex justify-content-between">
+                                <span data-th-text="#{adv_mgt}" class="bg-txt font-weight-bold"> Advertising Management</span>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="formModal">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="formLabel" data-th-text="#{usage}" style=""></div>
+                                    <div class="select">
+                                        <select class="formInput select-custom bg-txt font-weight-bold" id="usage" style=" width: 6em">
+                                            <option value="" class="bg-txt font-weight-bold">Y or N</option>
+                                            <option value="1" class="bg-txt font-weight-bold">Y</option>
+                                            <option value="0" class="bg-txt font-weight-bold">N</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="d-flex align-items-center mb-3" style="gap: 10px">
+                                    <div class="formLabel" data-th-text="#{schedule_t}" style="">SCHEDULE TIME</div>
+                                    <input class="formInput" style="background-color: white; border: 1px solid #5f5f5f;" id="startTime" type="number"/>
+                                    <input class="formInput" style="background-color: white; border: 1px solid #5f5f5f;" id="endTime" type="number"/>
+                                    <div class="font-weight-bold text-sm bg-txt">(HHMM ~ HHMM)</div>
+                                </div>
+                                <div class="d-flex align-items-center mb-3" style="gap: 10px">
+                                    <div class="formLabel" data-th-text="#{media}" style="text-transform: none">Media</div>
+                                    <button class="text-uppercase btn btn-xs text-white text-xs px-4 font-weight-bold"
+                                            data-th-text="#{search}" id="btnSearch" style="background-color: #558ED4"
+                                            type="button">SEARCH
+                                    </button>
+                                    <input accept="video/mp4,video/x-m4v,video/*" class="d-none" hidden="true"
+                                           id="inputMedia"
+                                           type="file"/>
+                                    <div class="font-weight-bold text-sm bg-txt" data-th-text="#{max_mp4_s}">MAXSIZE 300MB MP4
+                                        ONLY
+                                    </div>
+                                </div>
+                                <div class="formInput w-100 bg-txt font-weight-bold" id="fileName" >
+                                </div>
+                            </div>
+                        </div>
+                        <div id="videoPlaying" style="margin: 5%"></div>
+                        <div class="modal-footer">
+                            <button class="btn btn-success btn-sm text-uppercase font-weight-bold" data-th-text="#{save}"
+                                    id="btnSubmit" type="button" style="width: 7em" >Save
+                            </button>
+                            <button class="btn btn-secondary btn-sm font-weight-bold"
+                                    data-dismiss="modal"
+                                    data-th-text="#{close}"
+                                    id="btnCloseModal" type="button"
+                                    style="width: 7em"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+<th:block layout:fragment="content_script">
+    <script th:src="@{/js/module/monitor/monitor-configuration.js}"></script>
+</th:block>
+</html>
+<!-- /page content -->

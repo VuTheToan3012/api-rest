@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.AirlineManagerMapper">
+
+	<select id="selectAirlineDataAllList" resultType="com.urielsoft.cids.management.biz.dto.ViewAirlineManagerDTO">
+		<!--
+                select all Airline Data
+        -->
+		<![CDATA[
+			SELECT AL.*
+			     , USERS.USER_NM
+			FROM TB_ALINFOMNG AL
+				JOIN TB_USERINFOMNG USERS
+					ON AL.MDFY_USER_SEQ_NO = USERS.SEQ_NO
+			WHERE 1 = 1
+			ORDER BY AL.USAGE_YN desc
+        ]]>
+	</select>
+
+	<!--
+            select data Airline by param
+    -->
+	<select id="selectAirlineDataByParam" resultType="com.urielsoft.cids.management.biz.dto.ViewAirlineManagerDTO">
+		<![CDATA[
+			SELECT AL.*
+			     , USERS.USER_NM
+				FROM TB_ALINFOMNG AL
+					JOIN TB_USERINFOMNG USERS
+						ON AL.MDFY_USER_SEQ_NO = USERS.SEQ_NO
+			WHERE AL.AL_NM = #{alNm}
+				AND AL.AL_CODE = #{alCode}
+				AND AL.AL_CODE3 = #{alCode3}
+				AND AL.AL_CODEA = #{alCodea}
+		]]>
+	</select>
+
+	<!--
+                select data Airline by seqNo
+    -->
+	<select id="selectAirlineDataByAirLineSeq" resultType="com.urielsoft.cids.management.biz.dto.ViewAirlineManagerDTO">
+		<![CDATA[
+			SELECT AL.*
+			    , USERS.USER_NM
+			FROM TB_ALINFOMNG AL
+				JOIN TB_USERINFOMNG USERS
+					ON AL.MDFY_USER_SEQ_NO = USERS.SEQ_NO
+			WHERE AL.SEQ_NO = #{seqNo}
+		]]>
+	</select>
+
+	<!--
+            Select airline Data by alCode3
+    -->
+	<select id="selectAirlineDataByAlCode3" resultType="com.urielsoft.cids.management.biz.dto.ViewAirlineManagerDTO">
+		<![CDATA[
+			SELECT TOP 1 AL.*
+			FROM TB_ALINFOMNG AL
+			WHERE AL.AL_CODE3 = #{alCode3}
+		]]>
+	</select>
+
+	<!--
+            Select airline Data by alCode
+     -->
+	<select id="selectAirlineDataByAlCode" resultType="com.urielsoft.cids.management.biz.dto.ViewAirlineManagerDTO">
+		<![CDATA[
+			SELECT TOP 1 AL.*
+			FROM TB_ALINFOMNG AL
+			WHERE AL.AL_CODE = #{alCode}
+		]]>
+	</select>
+
+	<!--
+            Select airline Data by alCodea
+     -->
+	<select id="selectAirlineDataByAlCodea" resultType="com.urielsoft.cids.management.biz.dto.ViewAirlineManagerDTO">
+		<![CDATA[
+			SELECT TOP 1 AL.*
+			FROM TB_ALINFOMNG AL
+			WHERE AL.AL_CODEA = #{alCodea}
+		]]>
+	</select>
+
+	<!--
+		Insert New Airline Data
+	-->
+	<insert id="insertAirlineData" parameterType="com.urielsoft.cids.management.biz.dto.CreateAirlineManagerDTO">
+		<![CDATA[
+			INSERT INTO TB_ALINFOMNG (AL_NM
+			, AL_CODE
+			, AL_CODE3
+			, AL_CODEA
+			, LOGO_IMG
+			, USAGE_YN
+			, MDFY_USER_SEQ_NO
+			, REG_DT
+			, MDFY_DT)
+			VALUES (#{alNm}
+				,   UPPER(#{alCode}) , UPPER(#{alCode3})
+				,	#{alCodea},#{logoImg}
+				,   #{usageYn},#{mdfyUserSeqNo}
+				,   GETDATE() , GETDATE())
+		]]>
+	</insert>
+
+	<!--
+                Update Airline Data
+    -->
+	<update id="updateAirlineData" parameterType="com.urielsoft.cids.management.biz.dto.UpdateAirlineManagerDTO">
+		<![CDATA[
+			UPDATE TB_ALINFOMNG
+				SET AL_NM = #{alNm}
+					, AL_CODE  = UPPER(#{alCode})
+					, AL_CODE3 = UPPER(#{alCode3})
+					, AL_CODEA = #{alCodea}
+					, LOGO_IMG = #{logoImg}
+					, USAGE_YN = #{usageYn}
+					, MDFY_DT  =  GETDATE()
+					, MDFY_USER_SEQ_NO = #{mdfyUserSeqNo}
+			WHERE SEQ_NO = #{seqNo}
+		]]>
+	</update>
+
+	<!--
+                Delete Airline Data By SeqNo
+    -->
+	<delete id="deleteAirlineDataBySeqNo">
+		<![CDATA[
+			DELETE FROM TB_ALINFOMNG
+			WHERE SEQ_NO = #{seqNo}
+		]]>
+	</delete>
+
+</mapper>

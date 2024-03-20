@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.AdvertiseManagementMapper">
+
+	<!--
+		Select Advertise Management Data All List
+	-->
+	<select id="selectAdvertiseManagementDataAllList" resultType="com.urielsoft.cids.management.biz.dto.ViewAdvertiseManagementDTO">
+
+		<![CDATA[
+			SELECT *
+			FROM TB_ADVERTISEMNG AD
+			WHERE 1 = 1
+		]]>
+	</select>
+
+	<!--
+		Select Advertise Management Data By Seq
+	-->
+	<select id="selectAdvertiseManagementDataBySeq" resultType="com.urielsoft.cids.management.biz.dto.ViewAdvertiseManagementDTO">
+		<![CDATA[
+		SELECT *
+		FROM TB_ADVERTISEMNG AD
+		WHERE AD.SEQ_NO = #{advertiseManagementSeq}
+		]]>
+	</select>
+
+	<!--
+		Insert Advertise Management Data
+	-->
+	<insert id="insertAdvertiseManagementData" parameterType="com.urielsoft.cids.management.biz.dto.CreateAdvertiseManagementDTO">
+		<![CDATA[
+			INSERT INTO TB_ADVERTISEMNG ( ST_TM, END_TM
+										, USAGE_YN, FILE_NM
+										, PATH, REG_DT )
+			VALUES (
+			        #{stTm}
+			        , #{endTm}
+			        , #{usageYn}
+			        , #{fileNm}
+					, #{path}
+					, GETDATE() )
+		]]>
+	</insert>
+
+	<!--
+		Update Advertise Management Data
+	-->
+	<update id="updateAdvertiseManagementData" parameterType="com.urielsoft.cids.management.biz.dto.UpdateAdvertiseManagementDTO">
+		<![CDATA[
+			UPDATE TB_ADVERTISEMNG
+				SET ST_TM       = #{stTm},
+					END_TM      = #{endTm},
+					USAGE_YN    = #{usageYn},
+					FILE_NM     = #{fileNm},
+					PATH        = #{path},
+					REG_DT      = GETDATE()
+			WHERE SEQ_NO = #{seqNo}
+		]]>
+	</update>
+
+</mapper>

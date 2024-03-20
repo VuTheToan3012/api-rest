@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html
+        layout:decorate="~{layout/defaultLayout}"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" th:href="@{/css/module/monitor-management.css}"/>
+</head>
+<th:block layout:fragment="title">
+    <title data-th-text="#{cids_notmg}"></title>
+</th:block>
+<!-- page content -->
+<th:block layout:fragment="content_body">
+    <section class="content p-4">
+        <div class="text-sm mb-3 font-weight-medium" data-th-text="#{cids_notmg}"></div>
+        <div class="">
+            <div class="border px-3 pt-3 pb-2 rounded-lg d-flex justify-content-between align-items-end" >
+                <div class="d-flex align-items-end headerFilter">
+                    <div class="searchField">
+                        <div class="label text-uppercase" >
+                            <span data-th-text="#{date}"></span>:
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btnCalendar">
+                                <i class="far fa-calendar-alt"></i>
+                            </button>
+                            <input type="text" class="field" id="searchDate" size="10" oninput="limitInputLength(this)" placeholder="yyyy/mm/dd" />
+                        </div>
+                    </div>
+                    <div class="searchField">
+                        <div class="label text-uppercase" >
+                            <span data-th-text="#{type}"></span>:
+                        </div>
+                        <div class="select">
+                            <select class="field select-custom text-uppercase" id="searchType" style="width: 5.5em" >
+                                <option value="">ALL</option>
+                                <option class="text-uppercase" value="1">Export</option>
+                                <option class="text-uppercase" value="2">Import</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="searchField">
+                        <div class="label text-uppercase" >
+                            <span data-th-text="#{location}"></span>:
+                        </div>
+                        <div class="select">
+                            <select class="field select-custom text-uppercase" id="searchLocation" style="width: 9em" >
+                                <option value="">ALL</option>
+                                <option class="text-uppercase" value="1">Truck</option>
+                                <option class="text-uppercase" value="2">Security Customs</option>
+                                <option class="text-uppercase" value="6">Customs</option>
+                                <option class="text-uppercase" value="3">Exit MHS</option>
+                                <option class="text-uppercase" value="4">Enter MHS</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="d-flex justify-center align-items-center">
+                        <button class="border-0 text-xs rounded px-3 btnSearch py-1" data-th-text="#{search}" style="width: 7em">Search</button>
+                        <!-- <div class="btnExport ml-2"></div> -->
+                    </div>
+                </div>
+                <button class=" border-0 bg-red text-white rounded py-1 text-xs font-weight-bold" style="padding: 0px 50px; background-color: #FD443D !important;" onclick="showModal('add')" data-th-text="#{new_noti}">New Notify</button>
+            </div>
+
+            <!--Content-->
+            <div class="border form-content-page rounded-lg mt-3 wrapperTable">
+                <table class="table is-stripe display" id="tblNotify" style="width: 100%; text-align: center;">
+                    <thead>
+                    <tr>
+                        <th class="text-center text-uppercase border-top-0" style="width: 3% !important;" data-th-text="#{seqno}">Seqno</th>
+                        <th class="text-center text-uppercase border-top-0" style="width: 20% !important;" data-th-text="#{type}" >Type</th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 17% !important;" data-th-text="#{location}">Location</th>
+                        <th class="text-left border-top-0" style="width: 17% !important;" data-th-text="#{noti_info}">Notify Information</th>
+                        <th class="text-center border-top-0" style="width: 17% !important;" data-th-text="#{processing}">Processing</th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 14% !important;" data-th-text="#{send_date}">Send Date</th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 10% !important;" data-th-text="#{sender}" >Sender</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </section>
+    <section aria-label="Modal Notify">
+        <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-backdrop="static" data-keyboard="false"
+             id="modalNotifyDetail" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="min-width: 630px">
+                <form id="form" class="w-100">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="font-weight-bold mb-4 d-flex justify-content-between">
+                                <span data-th-text="#{noti_info }" class="font-weight-bold bg-txt" >Notify Information</span>
+                                <div class="rightAction">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="formModal">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="formLabel" data-th-text="#{type}">Type</div>
+                                    <div class="select">
+                                        <select class="formInput select-custom font-weight-bold" id="type" style="width:9.3em; font-size: 14px;;color: #6e6864;" >
+                                            <option value="3" class="font-weight-bold">ALL</option>
+                                            <option value="1" class="font-weight-bold">EXPORT</option>
+                                            <option value="2" class="font-weight-bold">IMPORT</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-3 ">
+                                    <div class="formLabel" data-th-text="#{location}">Location</div>
+                                    <div class="select">
+                                        <select class="formInput select-custom font-weight-bold" id="location" style="width:9.3em; font-size: 14px;;color: #6e6864;">
+                                            <option value="1" class="font-weight-bold">Truck</option>
+                                            <option value="2" class="font-weight-bold">Security</option>
+                                            <option value="3" class="font-weight-bold">Exit MHS</option>
+                                            <option value="4" class="font-weight-bold">Enter MHS</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="d-flex align-items-center mb-3" id="processRow">
+                                    <div class="formLabel" data-th-text="#{processing}">Processing</div>
+                                   <div class="select">
+                                       <select class="formInput select-custom font-weight-bold" id="processing" disabled style="width:5em;color: #6e6864;">
+                                           <option value="0" class="font-weight-bold">N</option>
+                                           <option value="1" class="font-weight-bold">Y</option>
+                                       </select>
+                                   </div>
+
+                                </div>
+                                <div class="mb-3">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <div class="formLabel text-capitalize"><span data-th-text="#{notify}"></span>(ENG)</div>
+                                        <div id="notifyEndLength" class="font-weight-bold">(0/255)</div>
+                                    </div>
+                                    <textarea class="formInput font-weight-bold" style="width: 100%; font-size: 14px;color: #6e6864;resize: none;" rows="4" id="notifyEng" maxlength="255"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <div class="formLabel text-capitalize"><span data-th-text="#{notify}"></span>(BEN)</div>
+                                        <div id="notifyBenLength" class="font-weight-bold">(0/255)</div>
+                                    </div>
+                                    <textarea class="formInput font-weight-bold" style="width: 100%; font-size: 14px;color: #6e6864;resize: none;" rows="4" id="notifyBen" maxlength="255"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="btnSubmit" class="btn btn-success btn-sm text-uppercase font-weight-bold" type="button" data-th-text="#{save}" >Save</button>
+                            <button id="btnCloseModal" class="btn btn-secondary btn-sm font-weight-bold " data-dismiss="modal" type="button" data-th-text="#{close}" >Close</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</th:block>
+<th:block layout:fragment="content_script">
+    <script th:src="@{/js/module/notify-manager.js}"></script>
+</th:block>
+</html>

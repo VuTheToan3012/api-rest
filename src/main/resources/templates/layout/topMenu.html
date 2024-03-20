@@ -1,0 +1,279 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<div th:fragment="topMenu">
+    <th:block layout:fragment="additional_css">
+        <link th:href="@{/css/topMenu.css}" rel="stylesheet"/>
+    </th:block>
+
+    <nav class="main-header navbar navbar-expand-md navbar-light navbar-white flex justify-content-between align-items-end"
+         style="border: none !important;">
+        <div style="display: flex; flex: 1; border-bottom: 1px solid rgb(206, 212, 218) !important;margin-left: 17px;">
+            <a href="/main" style="width:100px;margin-left: 15px;">
+                <img src="/images/logo.svg" style="max-height: 40px; padding-top: 3px;" width="100px" />
+            </a>
+
+
+            <!-- The menu of the screen has a high width -->
+            <ul class="navbar-nav ml-3" id="menuHighWidth">
+                <li class="nav-item dropdown">
+                    <a id="dropdownSubMenu1" href="#" th:classappend="${#request.requestURI.startsWith('/cids-monitor') ? 'active':''}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                       class="nav-link dropdown-toggle" data-th-text="#{cids_mon}"></a>
+                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow"
+                        style="left: 0px; right: inherit; padding-top: 2px">
+                        <li class="nav-item d-none d-sm-inline-block item-menu">
+                            <a href="/cids-monitor" th:classappend="${#request.requestURI.equals('/cids-monitor') ? 'active':''}"  class="subMenuItem" >
+                                <div class="subMenuName" data-th-text="#{cids_montr}">
+
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item d-none d-sm-inline-block item-menu">
+                            <a href="/cids-monitor/configuration" th:classappend="${#request.requestURI.equals('/cids-monitor/configuration') ? 'active':''}" class="subMenuItem">
+                                <div  class="subMenuName" data-th-text="#{cids_moncf}">
+                                </div>
+
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a id="dropdownSubMenu2" href="#" th:classappend="${#request.requestURI.startsWith('/monitor-manager') ? 'active':''}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                       class="nav-link dropdown-toggle " data-th-text="#{cids_monmg}" ></a>
+                    <div aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow"
+                        style="left: 0px; right: inherit; padding-top: 2px">
+                        <div class="nav-item d-none d-sm-inline-block">
+                            <a href="/monitor-manager"  th:classappend="${#request.requestURI.equals('/monitor-manager') ? 'active':''}" class="subMenuItem">
+                                <div class="subMenuName"  data-th-text="#{cids_monmg}" >
+
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a id="dropdownSubMenu3" href="#" th:classappend="${#request.requestURI.startsWith('/notify-manager') ? 'active':''}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                       class="nav-link dropdown-toggle " data-th-text="#{cids_notmg}" ></a>
+                    <ul aria-labelledby="dropdownSubMenu3" class="dropdown-menu border-0 shadow"
+                        style="left: 0px; right: inherit; padding-top: 2px">
+                        <li class="nav-item d-none d-sm-inline-block">
+                            <a href="/notify-manager"  th:classappend="${#request.requestURI.equals('/monitor-manager') ? 'active':''}" class="subMenuItem">
+                                <div class="subMenuName" data-th-text="#{cids_notmg}">
+
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a id="dropdownSubMenu4" href="#"  th:classappend="${#request.requestURI.startsWith('/history') ? 'active':''}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                       class="nav-link dropdown-toggle" data-th-text="#{his}"></a>
+                    <ul aria-labelledby="dropdownSubMenu4" class="dropdown-menu border-0 shadow"
+                        style="left: 0px; right: inherit;padding-top: 2px">
+                        <li class="nav-item d-none d-sm-inline-block item-menu">
+                            <a href="/history/system-log"  th:classappend="${#request.requestURI.equals('/history/system-log') ? 'active':''}" class="subMenuItem">
+                                <div class="subMenuName" data-th-text="#{sys_log}">
+
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item d-none d-sm-inline-block item-menu">
+                            <a href="/history/monitor-log" th:classappend="${#request.requestURI.equals('/history/monitor-log') ? 'active':''}"  class="subMenuItem">
+                                <div class="subMenuName" data-th-text="#{mon_log}">
+
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a id="dropdownSubMenu5" href="#" data-toggle="dropdown" th:classappend="${#request.requestURI.startsWith('/airline-manager') ? 'active':''}"  aria-haspopup="true" aria-expanded="false"
+                       class="nav-link dropdown-toggle" data-th-text="#{ali_mng}"></a>
+                    <ul aria-labelledby="dropdownSubMenu5" class="dropdown-menu border-0 shadow"
+                        style="left: 0px; right: inherit; padding-top: 2px">
+                        <li class="nav-item d-none d-sm-inline-block">
+                            <a href="/airline-manager" th:classappend="${#request.requestURI.equals('/airline-manager') ? 'active':''}" class="subMenuItem">
+                                <div class="subMenuName" data-th-text="#{ali_mng}" >
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a id="dropdownSubMenu6" href="#" th:classappend="${#request.requestURI.startsWith('/system-manager') ? 'active':''}"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                       class="nav-link dropdown-toggle" data-th-text="#{sys_mng}"></a>
+                    <ul aria-labelledby="dropdownSubMenu6" class="dropdown-menu border-0 shadow"
+                        style="left: 0px; right: inherit;width: 210px;padding-top: 2;">
+                        <li class="nav-item d-none d-sm-inline-block item-menu">
+                            <a href="/system-manager/user-management" th:classappend="${#request.requestURI.contains('/system-manager/user-management') ? 'active':''}"  class="subMenuItem">
+                                <div class="" data-th-text="#{user_mngt}">
+
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item d-none d-sm-inline-block item-menu">
+                            <a href="/system-manager/menu-management" th:classappend="${#request.requestURI.contains('/system-manager/menu-management') ? 'active':''}"  class="subMenuItem">
+                                <div class="subMenuName" data-th-text="#{menu_mngt}" >
+
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item d-none d-sm-inline-block item-menu">
+                            <a href="/system-manager/multilingual-management" th:classappend="${#request.requestURI.contains('/system-manager/multilingual-management') ? 'active':''}"  class="subMenuItem">
+                                <div class="subMenuName" data-th-text="#{mul_mngt}">
+
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item d-none d-sm-inline-block item-menu">
+                            <a href="/system-manager/environment-management" th:classappend="${#request.requestURI.contains('/system-manager/environment-management') ? 'active':''}"  class="subMenuItem">
+                                <div class="subMenuName" data-th-text="#{env_mngt}">
+
+                                </div>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- The menu of the screen has a low width -->
+            <!--        <div id="buttonOpenMenu" class="buttonOpenMenu">-->
+            <!--            <img src="/images/icon-menu.svg" style="width: 25px; height: 25px"/>-->
+            <!--        </div>-->
+            <div id="menuLowWidth">
+                <ul class="navbar-nav ml-3" id="openMenu">
+                    <li class="nav-item dropdown">
+                        <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                           class="nav-link dropdown-toggle" data-th-text="#{cids_mon}" ></a>
+                        <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow"
+                            style="left: 0px; right: inherit;">
+                            <li class="nav-item d-none d-sm-inline-block">
+                                <a href="/cids-monitor" class="nav-link">
+                                    <div class="subMenuName" data-th-text="#{cids_montr}">
+
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item d-none d-sm-inline-block">
+                                <a href="/cids-monitor/configuration" class="nav-link">
+                                    <div class="subMenuName" data-th-text="#{cids_moncf}">
+
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a id="dropdownSubMenu2" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                           class="nav-link dropdown-toggle" data-th-text="#{cids_monmg}"></a>
+                        <ul aria-labelledby="dropdownSubMenu2" class="dropdown-menu border-0 shadow"
+                            style="left: 0px; right: inherit;">
+                            <li class="nav-item d-none d-sm-inline-block">
+                                <a href="/monitor-manager" class="nav-link">
+                                    <div class="subMenuName" data-th-text="#{cids_monmg}">
+
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a id="dropdownSubMenu3" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                           class="nav-link dropdown-toggle" data-th-text="#{cids_notmg}"></a>
+                        <ul aria-labelledby="dropdownSubMenu3" class="dropdown-menu border-0 shadow"
+                            style="left: 0px; right: inherit;">
+                            <li class="nav-item d-none d-sm-inline-block">
+                                <a href="/notify-manager" class="nav-link">
+                                    <div class="subMenuName" data-th-text="#{cids_notmg}" >
+
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a id="dropdownSubMenu4" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                           class="nav-link dropdown-toggle" data-th-text="#{his}"></a>
+                        <ul aria-labelledby="dropdownSubMenu4" class="dropdown-menu border-0 shadow"
+                            style="left: 0px; right: inherit;">
+                            <li class="nav-item d-none d-sm-inline-block">
+                                <a href="/history/system-log" class="nav-link">
+                                    <div class="subMenuName" data-th-text="#{sys_log}">
+
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item d-none d-sm-inline-block">
+                                <a href="/history/monitor-log" class="nav-link">
+                                    <div class="subMenuName" data-th-text="#{mon_log}">
+
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a id="dropdownSubMenu5" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                           class="nav-link dropdown-toggle" data-th-text="#{ali_mng}"></a>
+                        <ul aria-labelledby="dropdownSubMenu5" class="dropdown-menu border-0 shadow"
+                            style="left: 0px; right: inherit;">
+                            <li class="nav-item d-none d-sm-inline-block">
+                                <a href="/airline-manager" class="nav-link">
+                                    <div class="subMenuName" data-th-text="#{ali_mng}">
+
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <a id="dropdownSubMenu6" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                           class="nav-link dropdown-toggle" data-th-text="#{sys_mng}"></a>
+                        <ul aria-labelledby="dropdownSubMenu6" class="dropdown-menu border-0 shadow"
+                            style="left: 0px; right: inherit;">
+                            <li class="nav-item d-none d-sm-inline-block">
+                                <a href="/system-manager/user-management" class="nav-link">
+                                    <div class="subMenuName" data-th-text="#{user_mngt}">
+
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item d-none d-sm-inline-block">
+                                <a href="/system-manager/menu-management" class="nav-link">
+                                    <div class="subMenuName" data-th-text="#{menu_mngt}">
+
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item d-none d-sm-inline-block">
+                                <a href="/system-manager/multilingual-management" class="nav-link">
+                                    <div class="subMenuName" data-th-text="#{mul_mngt}">
+
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="nav-item d-none d-sm-inline-block">
+                                <a href="/system-manager/environment-management" class="nav-link">
+                                    <div class="subMenuName" data-th-text="#{env_mngt}">
+
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Left navbar links -->
+        <div style="display: flex;height: 35px ; margin-right:15px ; border-bottom: 1px solid rgb(206, 212, 218) !important;">
+            <span class="font-weight-bold mr-5 ml-1" th:text="${#authentication.principal.username}"></span>
+            <button class="text-white border-0 bg-gray rounded-lg font-weight-medium" style="height: 25px;width: 80px;">
+                <a href="/logoutProc" data-th-text="#{logout}">Log Out</a>
+            </button>
+        </div>
+    </nav>
+</div>
+
+</body>
+</html>

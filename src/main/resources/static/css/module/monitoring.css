@@ -1,0 +1,109 @@
+.headerBoard{
+    border-bottom: 1px solid #eee;
+}
+.headerBoard .statusAnnotate {
+    margin-left: auto;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.headerBoard .statusAnnotate .item {
+    gap: 5px;
+}
+
+.headerBoard .statusAnnotate .item .box{
+    width: 35px;
+    height: 25px;
+    border-radius: 6px;
+    background-color: #3CB051;
+}
+
+.headerBoard .statusAnnotate .item .box.offline{
+    background-color: #FD443D;
+}
+.headerBoard .btnTab{
+    background-color: white;
+    color: #aeaeae;
+    padding: 5px 40px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-top: 1px solid #BFBFBF !important;
+    border-left: 1px solid #BFBFBF !important;
+    border-right: 1px solid #BFBFBF !important;
+}
+
+.headerBoard .btnTab.active{
+    background-color: #BFBFBF;
+    color: #000;
+    border-top: 1px solid black !important;
+    border-left: 1px solid black !important;
+    border-right: 1px solid black !important;
+    font-weight: bolder;
+}
+
+.board{
+    padding: 8px;
+}
+
+.board .borderLine{
+    margin-top: 80px;
+}
+
+.board .label{
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+.list-monitor{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding:2px 20px;
+}
+
+.monitor-item{
+    cursor: pointer;
+    width: 8%;
+    display: inline-block;
+}
+
+
+.monitor-item .circle{
+    padding: 10px 25px;
+    aspect-ratio: 1;
+    border-radius: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    border: 3px solid rgb(138,197,203);
+}
+
+.monitor-item .circle .icon{
+    font-size: 30px;
+    color: #7AD1D4
+}
+
+.monitor-item .circle .status{
+    width: 35px;
+    margin-top: 5px;
+    height: 25px;
+    border-radius: 6px;
+    background-color: #FD443D;
+}
+.monitor-item .circle .status.active{
+    background-color: #3CB051;
+}
+
+.monitor-item .name{
+    margin-top: 10px;
+    text-align: center;
+    padding: 2px 4px;
+    background: #eee;
+    border-radius: 3px;
+    font-size: 10pt ;
+    word-wrap: break-word;
+}
+
+.break-line{
+    margin-top: 50px;
+}

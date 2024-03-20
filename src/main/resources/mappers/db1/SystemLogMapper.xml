@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.SystemLogMapper">
+
+	<!--
+		Select System Log Data All List
+	-->
+	<select id="selectSystemLogDataAllList" resultType="com.urielsoft.cids.management.biz.dto.ViewSystemLogDTO">
+		<![CDATA[
+			SELECT OP.SEQ_NO , COUNT(*) OVER() AS countFilterData
+			FROM TB_OPRHIST OP
+			WHERE OP.MON_SEQ_NO is null
+		]]>
+	</select>
+
+	<!--
+		Select System Log Data By Seq
+	-->
+	<select id="selectSystemLogDataBySeq" resultType="com.urielsoft.cids.management.biz.dto.ViewSystemLogDTO">
+		<![CDATA[
+			SELECT *
+			FROM TB_OPRHIST OP
+			WHERE OP.SEQ_NO = #{systemLogSeq}
+		]]>
+	</select>
+
+	<!--
+		Select System Log Data By Date
+	-->
+	<select id="selectSystemLogDataByDate" resultType="com.urielsoft.cids.management.biz.dto.ViewSystemLogDTO">
+		<![CDATA[
+		SELECT *
+		FROM TB_OPRHIST OP
+		WHERE OP.OCCRRNC_DT >= #{startDate}
+		  AND OP.OCCRRNC_DT < DATEADD(day, 1, #{endDate})
+		]]>
+	</select>
+
+	<!-- Select System Log Data List Pagination And Search -->
+	<select id="selectSystemLogDataListPaginationAndSearch" resultType="com.urielsoft.cids.management.biz.dto.ViewSystemLogDTO">
+		<![CDATA[
+			SELECT OP.* , COUNT(*) OVER() AS countFilterData
+			FROM TB_OPRHIST OP
+   		]]>
+		<where>
+   			AND OP.MON_SEQ_NO is null
+			<if test="searchSystemLogPaginationStatusDTO.searchSysTyNmValue != null">
+				AND UPPER ( OP.SYS_TY_NM ) LIKE '%' + UPPER(#{searchSystemLogPaginationStatusDTO.searchSysTyNmValue}) + '%'
+			</if>
+			<if test="searchSystemLogPaginationStatusDTO.searchLogLvlValue != null">
+				AND UPPER ( OP.LOG_LVL ) LIKE '%' + UPPER(#{searchSystemLogPaginationStatusDTO.searchLogLvlValue}) + '%'
+			</if>
+			<if test="searchSystemLogPaginationStatusDTO.searchoCCRRNCDtValue != null">
+				AND CONVERT(DATE , OP.OCCRRNC_DT) = #{searchSystemLogPaginationStatusDTO.searchoCCRRNCDtValue}
+			</if>
+		</where>
+		<choose>
+			<when test="searchSystemLogPaginationStatusDTO.sortBy == 'seqNo' ">
+				<![CDATA[ ORDER BY OP.SEQ_NO ${searchSystemLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchSystemLogPaginationStatusDTO.sortBy == 'sysTyNm' ">
+				<![CDATA[ ORDER BY OP.SYS_TY_NM ${searchSystemLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchSystemLogPaginationStatusDTO.sortBy == 'logId' ">
+				<![CDATA[ ORDER BY OP.LOG_ID ${searchSystemLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchSystemLogPaginationStatusDTO.sortBy == 'logLvl' ">
+				<![CDATA[ ORDER BY OP.LOG_LVL ${searchSystemLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchSystemLogPaginationStatusDTO.sortBy == 'logData' ">
+				<![CDATA[ ORDER BY OP.LOG_DATA ${searchSystemLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchSystemLogPaginationStatusDTO.sortBy == 'monSeqNo' ">
+				<![CDATA[ ORDER BY OP.MON_SEQ_NO ${searchSystemLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchSystemLogPaginationStatusDTO.sortBy == 'occrrncdt' ">
+				<![CDATA[ ORDER BY OP.OCCRRNC_DT ${searchSystemLogPaginationStatusDTO.dir} ]]>
+			</when>
+
+			<otherwise>
+				<![CDATA[ ORDER BY OP.SEQ_NO DESC ]]>
+			</otherwise>
+		</choose>
+		<![CDATA[
+			 	OFFSET #{start} ROWS FETCH NEXT #{length} ROWS ONLY
+    		]]>
+	</select>
+</mapper>

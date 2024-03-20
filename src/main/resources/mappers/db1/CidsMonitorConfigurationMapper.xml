@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.CidsMonitorConfigurationMapper">
+
+    <!--
+            Select Cids Monitor Manager Data All List
+        -->
+    <select id="selectCidsMonitorConfigurationDataAllList" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsMonitorConfigurationDTO">
+
+		<![CDATA[
+        SELECT MONT.*
+             , TP.TMPLAT_NM
+             , US.USER_NM
+        	 , LOC.LOC_NM
+        FROM TB_MONTMPLATMNG MONT
+                 LEFT JOIN TB_TMPLATMNG TP
+                           ON MONT.TMPLAT_SEQ_NO = TP.SEQ_NO
+				 LEFT JOIN TB_USERINFOMNG US
+                           ON MONT.MDFY_USER_SEQ_NO = US.SEQ_NO
+				 LEFT JOIN TB_LOCTYMNG LOC
+                           ON MONT.LOC_TY_SEQ_NO = LOC.SEQ_NO
+        ]]>
+	</select>
+
+    <!--
+		Select CidsMonitorManager Data by seq
+	-->
+    <select id="selectCidsMonitorConfigurationDataBySeq" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsMonitorConfigurationDTO">
+		<![CDATA[
+		SELECT MONT.*
+			 , TP.TMPLAT_NM
+			 , US.USER_NM
+			 , LOC.LOC_NM
+		FROM TB_MONTMPLATMNG MONT
+				 LEFT JOIN TB_TMPLATMNG TP
+						   ON MONT.TMPLAT_SEQ_NO = TP.SEQ_NO
+				 LEFT JOIN TB_USERINFOMNG US
+						   ON MONT.MDFY_USER_SEQ_NO = US.SEQ_NO
+				 LEFT JOIN TB_LOCTYMNG LOC
+						   ON MONT.LOC_TY_SEQ_NO = LOC.SEQ_NO
+        WHERE MONT.SEQ_NO = #{cidsMonitorManagerSeq}
+        ]]>
+	</select>
+
+    <!--
+		Find Template By Type And Location Data
+	-->
+    <select id="findTemplateByTypeAndLocationData" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsMonitorConfigurationDTO">
+		<![CDATA[
+		SELECT MONT.TMPLAT_SEQ_NO
+		FROM TB_MONTMPLATMNG MONT
+        WHERE MONT.WK_TY_SEQ_NO = #{wkTySeqNo} AND MONT.LOC_TY_SEQ_NO = #{locTySeqNo}
+        ]]>
+	</select>
+
+	<!--
+		Update CidsMonitorManager Data
+	-->
+	<update id="updateCidsMonitorConfigurationData" parameterType="com.urielsoft.cids.management.biz.dto.UpdateCidsMonitorConfigurationDTO">
+    <![CDATA[
+		UPDATE TB_MONTMPLATMNG
+		SET
+			TMPLAT_SEQ_NO    = #{tmplatSeqNo},
+			MDFY_USER_SEQ_NO = #{mdfyUserSeqNo},
+			MDFY_DT          = GETDATE()
+		WHERE SEQ_NO = #{seqNo}
+
+		UPDATE TB_CIDSMONMNG
+		SET TMPLAT_SEQ_NO    = (
+			SELECT TMPLAT_SEQ_NO
+			FROM TB_MONTMPLATMNG
+			WHERE TB_MONTMPLATMNG.WK_TY_SEQ_NO = TB_CIDSMONMNG.WK_TY_SEQ_NO
+			  AND TB_MONTMPLATMNG.LOC_TY_SEQ_NO = TB_CIDSMONMNG.LOC_TY_SEQ_NO
+		),
+			MDFY_USER_SEQ_NO = (
+			    SELECT MDFY_USER_SEQ_NO
+				FROM TB_MONTMPLATMNG
+				WHERE TB_MONTMPLATMNG.WK_TY_SEQ_NO = TB_CIDSMONMNG.WK_TY_SEQ_NO
+					AND TB_MONTMPLATMNG.LOC_TY_SEQ_NO = TB_CIDSMONMNG.LOC_TY_SEQ_NO
+		),
+			MDFY_DT          = (
+			    SELECT MDFY_DT
+				FROM TB_MONTMPLATMNG
+				WHERE TB_MONTMPLATMNG.WK_TY_SEQ_NO = TB_CIDSMONMNG.WK_TY_SEQ_NO
+					AND TB_MONTMPLATMNG.LOC_TY_SEQ_NO = TB_CIDSMONMNG.LOC_TY_SEQ_NO)
+		WHERE EXISTS (
+					  SELECT 1
+					  FROM TB_MONTMPLATMNG
+					  WHERE TB_MONTMPLATMNG.WK_TY_SEQ_NO = TB_CIDSMONMNG.WK_TY_SEQ_NO
+						AND TB_MONTMPLATMNG.LOC_TY_SEQ_NO = TB_CIDSMONMNG.LOC_TY_SEQ_NO
+				  )
+		]]>
+</update>
+
+</mapper>

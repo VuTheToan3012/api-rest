@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html
+        layout:decorate="~{layout/defaultLayout}"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" th:href="@{/css/module/system-manager/user-management.css}"/>
+</head>
+<!-- page content -->
+<th:block layout:fragment="content_body">
+    <section class="content p-4">
+        <div class="text-sm mb-3 font-weight-medium">
+            <span data-th-text="#{sys_mng}"></span>
+            <span> › </span>
+            <span data-th-text="#{user_mngt}"></span>
+        </div>
+        <div class="">
+            <div class="border px-3 pt-3 pb-2 rounded-lg d-flex justify-content-between align-items-end">
+                <div class="d-flex align-items-center headerFilter">
+                    <div class="searchField">
+                        <div class="label text-uppercase">
+                            <span data-th-text="#{usernm}"></span>:
+                        </div>
+                        <input class="field" id="searchUserName" />
+                    </div>
+                    <div class="searchField">
+                        <div class="label text-uppercase">
+                            <span data-th-text="#{user_id}"></span>:
+                        </div>
+                        <input class="field" id="searchUserId" />
+                    </div>
+                    <div>
+                        <button class=" border-0 text-xs rounded px-3 btnSearch" id="btnSearch" style="width: 7em;margin-top: 20px;" data-th-text="#{search}" >Search</button>
+                    </div>
+                </div>
+                <button class="btnAddUser  border-0 bg-red text-white rounded py-1 text-xs font-weight-bold" style="padding: 0px 50px; background-color: #FD443D !important;" onclick="showModal('add')" data-th-text="#{new_user}" >New User</button>
+            </div>
+
+            <!--Content-->
+            <div class="border form-content-page rounded-lg mt-3 wrapperTable">
+                <table class="table is-stripe display" id="tblUser" style="width: 100%; text-align: center;">
+                    <thead>
+                    <tr>
+                        <th class="text-center text-uppercase border-top-0" style="width: 6% !important;" data-th-text="#{seqno}">SEQNO</th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 24% !important;" data-th-text="#{usernm}">User Name</th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 30% !important;" data-th-text="#{user_id}">User Id</th>
+                        <th class="text-left text-uppercase border-top-0" style="width: 30% !important;" data-th-text="#{authority}"> Authority</th>
+                        <th class="text-left text-uppercase border-top-0" style="width:10% !important;" data-th-text="#{mod_date}">Modify Date</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </section>
+    <!--    Modal user-->
+    <section aria-label="Modal User">
+        <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-backdrop="static" data-keyboard="false"
+             id="modalUser" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="min-width: 630px">
+                <form id="form">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="font-weight-bold mb-4 d-flex justify-content-between">
+                                <span data-th-text="#{user_mgt}" class="font-weight-bold bg-txt">User Management</span>
+                                <div class="rightAction">
+
+                                </div>
+                            </div>
+                            <div class="formModal">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="formLabel" style="" data-th-text="#{usernm}">Username</div>
+                                    <input class="formInput font-weight-bold" style="font-size: 14px;color: #6e6864;" id="username" autocomplete="false" />
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="formLabel" style="" data-th-text="#{user_id}">UserId</div>
+                                    <input class="formInput font-weight-bold" style="font-size: 14px;color: #6e6864;" id="userId" autocomplete="false" />
+                                    <button type="button" id="duplicateCheckBtn" class="ml-3 text-uppercase btn btn-xs text-white text-xs px-4 font-weight-bold" style="background-color: #558ED4" data-th-text="#{dup_chk}"> Duplicate Check</button>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="d-flex align-items-center w-50">
+                                        <div class="formLabel" style="width: 40%" data-th-text="#{password}">Password</div>
+                                        <input class="formInput font-weight-bold" style="width: 50%; font-size: 14px;" id="password" type="password" placeholder="" autocomplete="false"/>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-2 w-50">
+                                        <div class="formLabel" style="width: 55%" data-th-text="#{cf_pw}">Confirm Password</div>
+                                        <input class="formInput font-weight-bold" style="width: 45%; font-size: 14px;" id="confirmPassword" type="password" placeholder="" autocomplete="false"/>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-2 ">
+                                    <div class="formLabel" style="" data-th-text="#{authority}">Authority</div>
+                                    <div class="select">
+                                        <select class="formInput select-custom font-weight-bold" id="authority" style="width:9.3em; font-size: 14px;color: #6e6864;">
+                                            <option value="1" class="font-weight-bold" style="font-size: 14px;">ADMIN</option>
+                                            <option value="2" class="font-weight-bold" style="font-size: 14px;">USER</option>
+                                        </select>
+                                        <span class="select-arrow"></span>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="btnSubmit" class="btn btn-success btn-sm text-uppercase font-weight-bold" type="button" data-th-text="#{save}">Save</button>
+                            <button id="btnCloseModal" class="btn btn-secondary btn-sm font-weight-bold" data-dismiss="modal" type="button" data-th-text="#{close}">Close</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+<th:block layout:fragment="content_script">
+    <script th:src="@{/js/module/system-manager/user-management.js}"></script>
+</th:block>
+</html>
+<!-- /page content -->

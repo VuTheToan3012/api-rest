@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.MonitorLogMapper">
+
+	<!--
+		Select Monitor Log Data All List
+	-->
+	<select id="selectMonitorLogDataAllList" resultType="com.urielsoft.cids.management.biz.dto.ViewMonitorLogDTO">
+		<![CDATA[
+			SELECT OP.SEQ_NO , COUNT(*) OVER() AS countFilterData
+			FROM TB_OPRHIST OP
+			WHERE OP.MON_SEQ_NO is not null
+		]]>
+	</select>
+
+	<!--
+    Select System Log Data By Date
+	-->
+	<select id="selectMonitorLogDataByDate" resultType="com.urielsoft.cids.management.biz.dto.ViewMonitorLogDTO">
+		<![CDATA[
+		SELECT OP.* ,
+			   MON.WK_TY_NM ,
+			   MON.LOC_NM ,
+			   MON.MON_NM
+		FROM TB_OPRHIST OP
+				LEFT JOIN TB_CIDSMONMNG MON
+					ON OP.MON_SEQ_NO = MON.SEQ_NO
+		WHERE OP.MON_SEQ_NO is not null
+			  AND OP.OCCRRNC_DT >= #{startDate}
+		  	  AND OP.OCCRRNC_DT < DATEADD(day, 1, #{endDate})
+		]]>
+	</select>
+
+	<!--
+		Select Monitor Log Data By Seq
+	-->
+	<select id="selectMonitorLogDataBySeq" resultType="com.urielsoft.cids.management.biz.dto.ViewMonitorLogDTO">
+		<![CDATA[
+			SELECT  OP.* ,
+					MON.WK_TY_NM ,
+					MON.LOC_NM ,
+					MON.MON_NM
+			FROM TB_OPRHIST OP
+				LEFT JOIN TB_CIDSMONMNG MON
+					ON OP.MON_SEQ_NO = MON.SEQ_NO
+			WHERE OP.SEQ_NO = #{monitorLogSeq}
+		]]>
+	</select>
+
+	<!-- Select Monitor Log Data List Pagination And Search -->
+	<select id="selectMonitorLogDataListPaginationAndSearch" resultType="com.urielsoft.cids.management.biz.dto.ViewMonitorLogDTO">
+		<![CDATA[
+			SELECT 	OP.* , COUNT(*) OVER() AS countFilterData ,
+					MON.WK_TY_NM ,
+					MON.WK_TY_SEQ_NO ,
+					MON.LOC_TY_SEQ_NO ,
+					MON.LOC_NM ,
+					MON.MON_NM
+			FROM TB_OPRHIST OP
+				 LEFT JOIN TB_CIDSMONMNG MON
+					ON OP.MON_SEQ_NO = MON.SEQ_NO
+   		]]>
+		<where>
+			AND OP.MON_SEQ_NO is not null
+			<if test="searchMonitorLogPaginationStatusDTO.searchLocTySeqNoValue != null">
+				AND MON.LOC_TY_SEQ_NO IN
+				<foreach item="item" index="index" collection="searchMonitorLogPaginationStatusDTO.searchLocTySeqNoValue" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="searchMonitorLogPaginationStatusDTO.searchWkTySeqNoValue != null">
+				AND MON.WK_TY_SEQ_NO = #{searchMonitorLogPaginationStatusDTO.searchWkTySeqNoValue}
+			</if>
+			<if test="searchMonitorLogPaginationStatusDTO.searchMonNmValue != null">
+				AND UPPER ( MON.MON_NM ) LIKE '%' + UPPER(#{searchMonitorLogPaginationStatusDTO.searchMonNmValue}) + '%'
+			</if>
+			<if test="searchMonitorLogPaginationStatusDTO.searchLogLvlValue != null">
+				AND UPPER ( OP.LOG_LVL ) LIKE '%' + UPPER(#{searchMonitorLogPaginationStatusDTO.searchLogLvlValue}) + '%'
+			</if>
+			<if test="searchMonitorLogPaginationStatusDTO.searchSysTyNmValue != null">
+				AND UPPER ( OP.SYS_TY_NM ) LIKE '%' + UPPER(#{searchMonitorLogPaginationStatusDTO.searchSysTyNmValue}) + '%'
+			</if>
+			<if test="searchMonitorLogPaginationStatusDTO.searchOCCRRNCDtValue != null">
+				AND CONVERT(DATE , OP.OCCRRNC_DT) = #{searchMonitorLogPaginationStatusDTO.searchOCCRRNCDtValue}
+			</if>
+		</where>
+		<choose>
+			<when test="searchMonitorLogPaginationStatusDTO.sortBy == 'seqNo' ">
+				<![CDATA[ ORDER BY OP.SEQ_NO ${searchMonitorLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchMonitorLogPaginationStatusDTO.sortBy == 'wkTySeqNo' ">
+				<![CDATA[ ORDER BY MON.WK_TY_SEQ_NO ${searchMonitorLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchMonitorLogPaginationStatusDTO.sortBy == 'locSeqNo' ">
+				<![CDATA[ ORDER BY MON.LOC_SEQ_NO ${searchMonitorLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchMonitorLogPaginationStatusDTO.sortBy == 'MonNm' ">
+				<![CDATA[ ORDER BY MON.MON_NM ${searchMonitorLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchMonitorLogPaginationStatusDTO.sortBy == 'sysTyNm' ">
+				<![CDATA[ ORDER BY OP.SYS_TY_NM ${searchMonitorLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchMonitorLogPaginationStatusDTO.sortBy == 'logId' ">
+				<![CDATA[ ORDER BY OP.LOG_ID ${searchMonitorLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchMonitorLogPaginationStatusDTO.sortBy == 'logLvl' ">
+				<![CDATA[ ORDER BY OP.LOG_LVL ${searchMonitorLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchMonitorLogPaginationStatusDTO.sortBy == 'logData' ">
+				<![CDATA[ ORDER BY OP.LOG_DATA ${searchMonitorLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchMonitorLogPaginationStatusDTO.sortBy == 'monSeqNo' ">
+				<![CDATA[ ORDER BY MON.MON_SEQ_NO ${searchMonitorLogPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchMonitorLogPaginationStatusDTO.sortBy == 'occrrncdt' ">
+				<![CDATA[ ORDER BY MON.OCCRRNC_DT ${searchMonitorLogPaginationStatusDTO.dir} ]]>
+			</when>
+
+			<otherwise>
+				<![CDATA[ ORDER BY OP.SEQ_NO DESC ]]>
+			</otherwise>
+		</choose>
+		<![CDATA[
+			 	OFFSET #{start} ROWS FETCH NEXT #{length} ROWS ONLY
+    		]]>
+	</select>
+</mapper>

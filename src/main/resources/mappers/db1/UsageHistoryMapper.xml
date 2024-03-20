@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.UsageHistoryMapper">
+
+	<!--
+		Select Usage History Data All List
+	-->
+	<select id="selectUsageHistoryDataAllList" resultType="com.urielsoft.cids.management.biz.dto.ViewUsageHistoryDTO">
+		<![CDATA[
+			SELECT CH.SEQ_NO , COUNT(*) OVER() AS countFilterData
+				 , LO.LOC_NM
+				 , WK.WK_TY_NM
+				 , MON.MON_NM
+			FROM TB_CTRLHIST CH
+				LEFT JOIN TB_LOCTYMNG LO
+				    ON CH.LOC_TY_SEQ_NO = LO.SEQ_NO
+				LEFT JOIN TB_WKTYMNG WK
+				    ON CH.WK_TY_SEQ_NO = WK.SEQ_NO
+				LEFT JOIN TB_CIDSMONMNG MON
+				    ON CH.MON_SEQ_NO = MON.SEQ_NO
+			WHERE 1 = 1
+		]]>
+	</select>
+
+	<!--
+		Select Usage History Data By Seq
+	-->
+	<select id="selectUsageHistoryDataBySeq" resultType="com.urielsoft.cids.management.biz.dto.ViewUsageHistoryDTO">
+		<![CDATA[
+			SELECT CH.*
+				 , LO.LOC_NM
+				 , WK.WK_TY_NM
+				 , MON.MON_NM
+			FROM TB_CTRLHIST CH
+					 LEFT JOIN TB_LOCTYMNG LO
+							   ON CH.LOC_TY_SEQ_NO = LO.SEQ_NO
+					 LEFT JOIN TB_WKTYMNG WK
+							   ON CH.WK_TY_SEQ_NO = WK.SEQ_NO
+					 LEFT JOIN TB_CIDSMONMNG MON
+							   ON CH.MON_SEQ_NO = MON.SEQ_NO
+			WHERE CH.SEQ_NO = #{usageHistorySeq}
+		]]>
+	</select>
+
+	<!-- Select Usage History Data List with Pagination and Search -->
+	<select id="selectUsageHistoryDataListPaginationAndSearch" resultType="com.urielsoft.cids.management.biz.dto.ViewUsageHistoryDTO">
+		<![CDATA[
+			SELECT CH.* , COUNT(*) OVER() AS countFilterData
+				 , LO.LOC_NM
+				 , WK.WK_TY_NM
+				 , MON.MON_NM
+			FROM TB_CTRLHIST CH
+				LEFT JOIN TB_LOCTYMNG LO
+					ON CH.LOC_TY_SEQ_NO = LO.SEQ_NO
+				LEFT JOIN TB_WKTYMNG WK
+					ON CH.WK_TY_SEQ_NO = WK.SEQ_NO
+				LEFT JOIN TB_CIDSMONMNG MON
+					ON CH.MON_SEQ_NO = MON.SEQ_NO
+   		]]>
+		<where>
+			<if test="searchUsageHistoryPaginationStatusDTO.searchMonNmValue != null">
+				AND UPPER ( CH.MON_NM ) LIKE '%' + UPPER(#{searchUsageHistoryPaginationStatusDTO.searchMonNmValue}) + '%'
+			</if>
+			<if test="searchUsageHistoryPaginationStatusDTO.searchLocTySeqNoValue != null">
+				AND CH.LOC_TY_SEQ_NO = #{searchUsageHistoryPaginationStatusDTO.searchLocTySeqNoValue}
+			</if>
+			<if test="searchUsageHistoryPaginationStatusDTO.searchWkTySeqNoValue != null">
+				AND CH.WK_TY_SEQ_NO = #{searchUsageHistoryPaginationStatusDTO.searchWkTySeqNoValue}
+			</if>
+			<if test="searchUsageHistoryPaginationStatusDTO.searchRegDtValue != null">
+				AND CONVERT(DATE , CH.REG_DT) = #{searchUsageHistoryPaginationStatusDTO.searchRegDtValue}
+			</if>
+		</where>
+		<choose>
+			<when test="searchUsageHistoryPaginationStatusDTO.sortBy == 'seqNo' ">
+				<![CDATA[ ORDER BY CH.SEQ_NO ${searchUsageHistoryPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchUsageHistoryPaginationStatusDTO.sortBy == 'wkTySeqNo' ">
+				<![CDATA[ ORDER BY CH.WK_TY_SEQ_NO ${searchUsageHistoryPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchUsageHistoryPaginationStatusDTO.sortBy == 'locTySeqNo' ">
+				<![CDATA[ ORDER BY CH.LOC_TY_SEQ_NO ${searchUsageHistoryPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchUsageHistoryPaginationStatusDTO.sortBy == 'monNm' ">
+				<![CDATA[ ORDER BY CH.MON_NM ${searchUsageHistoryPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchUsageHistoryPaginationStatusDTO.sortBy == 'logData' ">
+				<![CDATA[ ORDER BY CH.LOG_DATA ${searchUsageHistoryPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchUsageHistoryPaginationStatusDTO.sortBy == 'regDt' ">
+				<![CDATA[ ORDER BY CH.REG_DT ${searchUsageHistoryPaginationStatusDTO.dir} ]]>
+			</when>
+
+			<otherwise>
+				<![CDATA[ ORDER BY CH.SEQ_NO DESC ]]>
+			</otherwise>
+		</choose>
+		<![CDATA[
+			 	OFFSET #{start} ROWS FETCH NEXT #{length} ROWS ONLY
+    		]]>
+	</select>
+
+</mapper>

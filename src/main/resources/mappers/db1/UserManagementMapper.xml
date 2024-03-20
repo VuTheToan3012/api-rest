@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.UserManagementMapper">
+
+	<!--
+		Select User Management Data All List
+	-->
+	<select id="selectUserManagementDataAllList" resultType="com.urielsoft.cids.management.biz.dto.ViewUserManagementDTO">
+
+		<![CDATA[
+			SELECT US.*
+			      , AUTH.AUTH_TY_NM
+			FROM TB_USERINFOMNG US
+			 	JOIN TB_AUTHMNG AUTH
+			 		ON US.AUTH_SEQ_NO = AUTH.SEQ_NO
+			WHERE 1 = 1
+			ORDER BY SEQ_NO DESC
+		]]>
+	</select>
+	
+	<!--
+		Select User Management Data by Seq
+	-->
+	<select id="selectUserManagementDataBySeq" resultType="com.urielsoft.cids.management.biz.dto.ViewUserManagementDTO">
+		<![CDATA[
+			SELECT US.*
+			     , AUTH.AUTH_TY_NM
+			FROM TB_USERINFOMNG US
+				JOIN TB_AUTHMNG AUTH
+					ON US.AUTH_SEQ_NO = AUTH.SEQ_NO
+			WHERE US.SEQ_NO = #{userManagementSeq}
+		]]>
+	</select>
+
+	<!--
+            Select User Management Data by Id
+     -->
+	<select id="selectUserManagementDataById" resultType="com.urielsoft.cids.management.biz.dto.ViewUserManagementDTO">
+		<![CDATA[
+			SELECT TOP 1 US.*
+				 , AUTH.AUTH_TY_NM
+			FROM TB_USERINFOMNG US
+				JOIN TB_AUTHMNG AUTH
+					ON US.AUTH_SEQ_NO = AUTH.SEQ_NO
+			WHERE US.USER_ID = #{userManagementId}
+		]]>
+	</select>
+
+	<!--
+		Insert New User Management Data
+	-->
+	<insert id="insertUserManagementData" parameterType="com.urielsoft.cids.management.biz.dto.CreateUserManagementDTO">
+		<![CDATA[
+			INSERT INTO TB_USERINFOMNG (USER_NM, USER_ID
+										, USER_PW, AUTH_SEQ_NO
+										, REG_DT, MDFY_DT
+										, MDFY_USER_SEQ_NO)
+			VALUES (#{userNm}
+					, #{userId}
+					, #{userPw}
+					, #{authSeqNo}
+					, GETDATE()
+					, GETDATE()
+					, #{mdfyUserSeqNo})
+		]]>
+	</insert>
+
+	<!--
+		Update User Management Data
+	-->
+	<update id="updateUserManagementData" parameterType="com.urielsoft.cids.management.biz.dto.UpdateUserManagementDTO">
+		<![CDATA[
+			UPDATE TB_USERINFOMNG
+				SET USER_NM          = #{userNm},
+					USER_ID          = #{userId},
+					USER_PW          = #{userPw},
+					AUTH_SEQ_NO      = #{authSeqNo},
+					MDFY_DT          = GETDATE(),
+					MDFY_USER_SEQ_NO = #{mdfyUserSeqNo}
+			WHERE SEQ_NO = #{seqNo}
+		]]>
+	</update>
+
+	<!--
+		Delete User Management Data By Seq
+	-->
+	<delete id="deleteUserManagementDataBySeq">
+		<![CDATA[
+			DELETE FROM TB_USERINFOMNG
+			WHERE SEQ_NO = #{userManagementSeq}
+		]]>
+	</delete>
+	
+</mapper>

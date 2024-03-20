@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.CidsLogMapper">
+
+	<!--
+	#############################################################################
+	# ### SELECT
+	#############################################################################
+	-->
+	
+	<!--
+	#############################################################################
+	# ### INSERT
+	#############################################################################
+	-->
+	
+	<!--
+		Insert CIDS Operation Log
+	-->
+	<insert id="insertCidsOperationLog">
+		<![CDATA[
+			INSERT INTO TB_OPRHIST (SYS_TY_NM, LOG_ID, LOG_LVL, LOG_DATA, MON_SEQ_NO, OCCRRNC_DT)
+			     VALUES (#{systemTypeName}, #{logId}, #{logLevel}, #{logData}, #{monSeqNo}, GETDATE())
+		]]>
+	</insert>
+	
+	<!--
+		Insert CIDS Protocol Log
+	-->
+	<insert id="insertCidsProtocolLog">
+		<![CDATA[
+			INSERT INTO TB_PROTHIST (TRAN_ID, PROT_NM, MON_SEQ_NO, RSLT, REQ_DATA, REPN_DATA, OCCRRNC_DT, OCCRRNC_USER_SEQ_NO)
+			     VALUES (#{transactionId}, #{protocolName}, #{monSeqNo}, #{result}, #{requestData}, #{responseData}, GETDATE(), #{occrrncUserSeqNo})
+		]]>
+	</insert>
+
+	<!--
+		Insert CIDS Protocol Log
+	-->
+	<insert id="insertCidsProtocolLogNoMonitorSeqNo">
+		<![CDATA[
+			INSERT INTO TB_PROTHIST (TRAN_ID, PROT_NM, RSLT, REQ_DATA, REPN_DATA, OCCRRNC_DT, OCCRRNC_USER_SEQ_NO)
+			     VALUES (#{transactionId}, #{protocolName}, #{result}, #{requestData}, #{responseData}, GETDATE(), #{occrrncUserSeqNo})
+		]]>
+	</insert>
+
+	<!--
+	#############################################################################
+	# ### UPDATE
+	#############################################################################
+	-->
+
+	<!--
+	#############################################################################
+	# ### DELETE
+	#############################################################################
+	-->
+	
+</mapper>

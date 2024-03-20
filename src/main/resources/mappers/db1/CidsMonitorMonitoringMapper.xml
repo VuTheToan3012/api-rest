@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.CidsMonitorMonitoringMapper">
+
+    <!--
+        Select CidsMonitorMonitoring Data All List
+    -->
+    <select id="selectCidsMonitorMonitoringDataAllList" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsMonitorMonitoringDTO">
+		<![CDATA[
+        SELECT TRM.*
+        	 , MON.*
+        FROM TB_CIDSMONTRMNG TRM
+        	LEFT JOIN TB_CIDSMONMNG MON
+        		ON TRM.MON_SEQ_NO = MON.SEQ_NO
+        WHERE MON.WK_TY_SEQ_NO = #{wkTySeqNo} AND MON.USAGE=1;
+        ]]>
+	</select>
+
+    <!--
+		Select CidsMonitorMonitoring Data by seq
+	-->
+    <select id="selectCidsMonitorMonitoringDataBySeq" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsMonitorMonitoringDTO">
+		<![CDATA[
+		SELECT TRM.*
+			 , MON.MON_NM
+			 , MON.LOC_NM
+			 , MON.WK_TY_NM
+		FROM TB_CIDSMONTRMNG TRM
+			LEFT JOIN TB_CIDSMONMNG MON
+				ON TRM.MON_SEQ_NO = MON.SEQ_NO
+        WHERE TRM.SEQ_NO = #{cidsMonitorMonitoringSeq}
+        ]]>
+	</select>
+
+    <!--
+		Insert New CidsMonitorMonitoring Data
+	-->
+    <insert id="insertCidsMonitorMonitoringData" parameterType="com.urielsoft.cids.management.biz.dto.CreateCidsMonitorMonitoringDTO">
+		<![CDATA[
+        INSERT INTO TB_CIDSMONTRMNG (MON_SEQ_NO
+                                   , STS, STS_CD
+                                   , REG_DT, MDFY_DT)
+        VALUES (
+                 #{monSeqNo}
+               , #{sts}
+               , #{stsCd}
+               , GETDATE()
+               , GETDATE())
+        ]]>
+	</insert>
+
+	<!--
+           find Cids MonitorManager ByLocAndTy
+        -->
+
+	<select id="findCidsMonitorManagerByLocAndTy" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsMonitorMonitoringDTO">
+		<![CDATA[
+		SELECT TRM.*
+			 , MON.MON_NM
+			 , MON.LOC_NM
+			 , MON.WK_TY_NM
+			,MON.WK_TY_SEQ_NO
+		    ,MON.LOC_TY_SEQ_NO
+		FROM TB_CIDSMONTRMNG TRM
+				 LEFT JOIN TB_CIDSMONMNG MON
+						   ON TRM.MON_SEQ_NO = MON.SEQ_NO
+      	WHERE MON.WK_TY_SEQ_NO=#{wkTySeqNo} AND  MON.LOC_TY_SEQ_NO=#{locTySeqNo} AND TRM.STS='ONLINE'
+		]]>
+	</select>
+</mapper>

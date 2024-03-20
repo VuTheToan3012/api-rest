@@ -1,0 +1,24 @@
+<script th:src="@{/vendors/jquery/jquery-3.7.0.min.js}"></script>
+<script th:src="@{/vendors/jquery/jquery.cookie.js}"></script>
+<script th:src="@{/vendors/jquery-ui/jquery-ui.js}"></script>
+<script th:src="@{/vendors/i18next/i18next.min.js}"></script>
+<script th:src="@{/vendors/i18next/jquery-i18next.min.js}"></script>
+<script th:src="@{/vendors/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/vendors/adminlte/js/adminlte.min.js}"></script>
+<script th:src="@{/vendors/datatables/datatables.min.js}"></script>
+<script th:src="@{/vendors/datatables/dataTables.buttons.js}"></script>
+<script th:src="@{/vendors/datatables/jszip.js}"></script>
+<script th:src="@{/vendors/datatables/buttons.html5.js}"></script>
+<script th:src="@{/js/constants.js}"></script>
+<!--Pass variable from Spring-->
+<script th:inline="javascript">
+    /* variable used by index.js */
+    SOCKET_URL = [[${websocketUrl}]];
+
+
+</script>
+<script th:src="@{/js/socket.js}"></script>
+<script th:src="@{/js/locale.js}"></script>
+<script th:src="@{/js/common.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/dialog.js}"></script>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.ErrorHistoryMapper">
+
+	<!--
+		Select Error History Data All List
+	-->
+	<select id="selectErrorHistoryDataAllList" resultType="com.urielsoft.cids.management.biz.dto.ViewErrorHistoryDTO">
+		<![CDATA[
+			SELECT ER.SEQ_NO , COUNT(*) OVER() AS countFilterData
+				 , LO.LOC_NM
+				 , WK.WK_TY_NM
+				 , MON.MON_NM
+			FROM TB_ERRHIST ER
+				LEFT JOIN TB_LOCTYMNG LO
+				    ON ER.LOC_TY_SEQ_NO = LO.SEQ_NO
+				LEFT JOIN TB_WKTYMNG WK
+				    ON ER.WK_TY_SEQ_NO = WK.SEQ_NO
+				LEFT JOIN TB_CIDSMONMNG MON
+				    ON ER.MON_SEQ_NO = MON.SEQ_NO
+			WHERE 1 = 1
+		]]>
+	</select>
+
+	<!--
+		Select Error History Data By Seq
+	-->
+	<select id="selectErrorHistoryDataBySeq" resultType="com.urielsoft.cids.management.biz.dto.ViewErrorHistoryDTO">
+		<![CDATA[
+			SELECT ER.*
+				 , LO.LOC_NM
+				 , WK.WK_TY_NM
+				 , MON.MON_NM
+			FROM TB_ERRHIST ER
+					 LEFT JOIN TB_LOCTYMNG LO
+							   ON ER.LOC_TY_SEQ_NO = LO.SEQ_NO
+					 LEFT JOIN TB_WKTYMNG WK
+							   ON ER.WK_TY_SEQ_NO = WK.SEQ_NO
+					 LEFT JOIN TB_CIDSMONMNG MON
+							   ON ER.MON_SEQ_NO = MON.SEQ_NO
+			WHERE ER.SEQ_NO = #{errorHistorySeq}
+		]]>
+	</select>
+
+	<!-- Select Error History Data List with Pagination and Search -->
+	<select id="selectErrorHistoryDataListPaginationAndSearch" resultType="com.urielsoft.cids.management.biz.dto.ViewErrorHistoryDTO">
+		<![CDATA[
+			SELECT ER.* , COUNT(*) OVER() AS countFilterData
+				 , LO.LOC_NM
+				 , WK.WK_TY_NM
+				 , MON.MON_NM
+			FROM TB_ERRHIST ER
+				LEFT JOIN TB_LOCTYMNG LO
+					ON ER.LOC_TY_SEQ_NO = LO.SEQ_NO
+				LEFT JOIN TB_WKTYMNG WK
+					ON ER.WK_TY_SEQ_NO = WK.SEQ_NO
+				LEFT JOIN TB_CIDSMONMNG MON
+					ON ER.MON_SEQ_NO = MON.SEQ_NO
+   		]]>
+		<where>
+			<if test="searchErrorHistoryPaginationStatusDTO.searchMonNmValue != null">
+				AND UPPER ( ER.MON_NM ) LIKE '%' + UPPER(#{searchErrorHistoryPaginationStatusDTO.searchMonNmValue}) + '%'
+			</if>
+			<if test="searchErrorHistoryPaginationStatusDTO.searchLocTySeqNoValue != null">
+				AND ER.LOC_TY_SEQ_NO = #{searchErrorHistoryPaginationStatusDTO.searchLocTySeqNoValue}
+			</if>
+			<if test="searchErrorHistoryPaginationStatusDTO.searchWkTySeqNoValue != null">
+				AND ER.WK_TY_SEQ_NO = #{searchErrorHistoryPaginationStatusDTO.searchWkTySeqNoValue}
+			</if>
+			<if test="searchErrorHistoryPaginationStatusDTO.searchRegDtValue != null">
+				AND CONVERT(DATE , ER.REG_DT) = #{searchErrorHistoryPaginationStatusDTO.searchRegDtValue}
+			</if>
+		</where>
+		<choose>
+			<when test="searchErrorHistoryPaginationStatusDTO.sortBy == 'seqNo' ">
+				<![CDATA[ ORDER BY ER.SEQ_NO ${searchErrorHistoryPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchErrorHistoryPaginationStatusDTO.sortBy == 'wkTySeqNo' ">
+				<![CDATA[ ORDER BY ER.WK_TY_SEQ_NO ${searchErrorHistoryPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchErrorHistoryPaginationStatusDTO.sortBy == 'locTySeqNo' ">
+				<![CDATA[ ORDER BY ER.LOC_TY_SEQ_NO ${searchErrorHistoryPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchErrorHistoryPaginationStatusDTO.sortBy == 'monNm' ">
+				<![CDATA[ ORDER BY ER.MON_NM ${searchErrorHistoryPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchErrorHistoryPaginationStatusDTO.sortBy == 'logData' ">
+				<![CDATA[ ORDER BY ER.LOG_DATA ${searchErrorHistoryPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchErrorHistoryPaginationStatusDTO.sortBy == 'regDt' ">
+				<![CDATA[ ORDER BY ER.REG_DT ${searchErrorHistoryPaginationStatusDTO.dir} ]]>
+			</when>
+
+			<otherwise>
+				<![CDATA[ ORDER BY ER.SEQ_NO DESC ]]>
+			</otherwise>
+		</choose>
+		<![CDATA[
+			 	OFFSET #{start} ROWS FETCH NEXT #{length} ROWS ONLY
+    		]]>
+	</select>
+</mapper>

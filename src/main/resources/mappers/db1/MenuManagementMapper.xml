@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.MenuManagementMapper">
+
+
+    <!--
+        Select Menu Data All List
+    -->
+    <select id="selectMenuDataAllList" resultType="com.urielsoft.cids.management.biz.dto.ViewMenuManagementDTO">
+		<![CDATA[
+        SELECT * FROM TB_MENUMNG
+        WHERE 1 = 1
+        ]]>
+	</select>
+
+    <!--
+        Select Menu Data by Menu Name English
+    -->
+    <select id="selectMenuDataBySeqNo" resultType="com.urielsoft.cids.management.biz.dto.ViewMenuManagementDTO">
+		<![CDATA[
+        SELECT * FROM TB_MENUMNG
+        WHERE SEQ_NO = #{seqNo}
+        ]]>
+	</select>
+
+    <!--
+        Update Menu Data
+    -->
+    <update id="updateMenuData" parameterType="com.urielsoft.cids.management.biz.dto.UpdateMenuManagementDTO">
+		<![CDATA[
+        UPDATE TB_MENUMNG
+			SET VW_YN            = #{vwYn},
+				MDFY_DT          = GETDATE(),
+				MENU_NM_BEN      = #{menuNmBen},
+				MENU_NM_KOR      = #{menuNmKor},
+				MDFY_USER_SEQ_NO = #{mdfyUserSeqNo}
+        WHERE SEQ_NO = #{seqNo}
+        ]]>
+	</update>
+
+    <!--
+        Insert New Menu Data
+    -->
+    <insert id="insertMenuData" parameterType="com.urielsoft.cids.management.biz.dto.CreateMenuManagementDTO">
+		<![CDATA[
+        INSERT INTO TB_MENUMNG (MENU_NM_ENG, MENU_NM_BEN
+								, MENU_NM_KOR, TAG_ID
+								, VW_YN, REG_DT
+								, MDFY_DT, MDFY_USER_SEQ_NO)
+        VALUES (
+                  #{menuNmEng}, #{menuNmBen}
+                , #{menuNmKor}, #{tagId}
+                , #{vwYn}     , GETDATE()
+                , GETDATE()   , #{mdfyUserSeqNo})
+        ]]>
+	</insert>
+
+	<!--
+		Select Menu Management Data by Tag Id
+	-->
+	<select id="selectMenuManagementDataByTagId" resultType="com.urielsoft.cids.management.biz.dto.ViewMenuManagementDTO">
+		<![CDATA[
+			SELECT * FROM TB_MENUMNG
+			WHERE TAG_ID = #{menuManagementTagId}
+		]]>
+	</select>
+
+</mapper>

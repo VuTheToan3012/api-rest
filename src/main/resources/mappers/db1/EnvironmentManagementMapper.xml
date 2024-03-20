@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.EnvironmentManagementMapper">
+
+	<!--
+		select Environment Management Data All List
+	-->
+	<select id="selectEnvironmentManagementDataAllList" resultType="com.urielsoft.cids.management.biz.dto.ViewEnvironmentManagementDTO">
+
+		<![CDATA[
+			SELECT EN.* ,
+			       US.USER_NM
+			FROM TB_ENVMNG EN
+				LEFT JOIN TB_USERINFOMNG US
+					ON EN.MDFY_USER_SEQ_NO = US.SEQ_NO
+			WHERE 1=1
+		]]>
+	</select>
+
+	<!--
+		Select Environment Management Data By Seq
+	-->
+	<select id="selectEnvironmentManagementDataBySeq" resultType="com.urielsoft.cids.management.biz.dto.ViewEnvironmentManagementDTO">
+		<![CDATA[
+		SELECT EN.*
+		FROM TB_ENVMNG EN
+		WHERE EN.SEQ_NO = #{seqNo}
+		]]>
+	</select>
+
+	<!--
+		Update Environment Management Data
+	-->
+	<update id="updateEnvironmentManagementData" parameterType="com.urielsoft.cids.management.biz.dto.UpdateEnvironmentManagementDTO">
+		<![CDATA[
+        UPDATE TB_ENVMNG
+        SET ENV_PROP_VAL     = #{envPropVal},
+            NOTE             = #{note},
+            MDFY_DT          = GETDATE(),
+            MDFY_USER_SEQ_NO = #{mdfyUserSeqNo}
+        WHERE SEQ_NO = #{seqNo}
+        ]]>
+	</update>
+
+</mapper>

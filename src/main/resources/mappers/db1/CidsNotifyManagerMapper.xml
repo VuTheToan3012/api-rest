@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.CidsNotifyManagerMapper">
+
+    <!--
+            Select CidsNotifyManager Data All List
+        -->
+    <select id="selectNotifyManagerDataAllList" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsNotifyManagerDTO">
+		<![CDATA[
+        SELECT NOTI.SEQ_NO, COUNT(*) OVER() AS countFilterData
+             , US.USER_NM
+        	 , LOC.LOC_NM
+        FROM TB_NOTIMNG NOTI
+        	JOIN TB_USERINFOMNG US
+        		ON NOTI.MDFY_USER_SEQ_NO = US.SEQ_NO
+        	JOIN TB_LOCTYMNG LOC
+        		ON NOTI.LOC_TY_SEQ_NO = LOC.SEQ_NO
+        ORDER BY NOTI.SEQ_NO desc , NOTI.MSG_FWD_YN desc
+        ]]>
+	</select>
+
+    <!--
+		Select CidsMonitorManager Data by seq
+	-->
+    <select id="selectCidsNotifyManagerDataBySeq" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsNotifyManagerDTO">
+		<![CDATA[
+        SELECT NOTI.*
+             , US.USER_NM
+        	 , LOC.LOC_NM
+        FROM TB_NOTIMNG NOTI
+        	LEFT JOIN TB_USERINFOMNG US
+        		ON NOTI.MDFY_USER_SEQ_NO = US.SEQ_NO
+			LEFT JOIN TB_LOCTYMNG LOC
+				 ON NOTI.LOC_TY_SEQ_NO = LOC.SEQ_NO
+        WHERE NOTI.SEQ_NO = #{cidsNotifyManagerSeq}
+        ]]>
+	</select>
+
+	<!--
+		Insert New CidsNotifyManager Data
+	-->
+	<insert id="insertCidsNotifyManagerData" parameterType="com.urielsoft.cids.management.biz.dto.CreateCidsNotifyManagerDTO">
+		<![CDATA[
+		INSERT INTO TB_NOTIMNG 	( WK_TY_NM, WK_TY_SEQ_NO
+									, LOC_TY_SEQ_NO, NOTI_ENG
+									 , NOTI_BEN, MSG_FWD_YN
+									 , REG_DT, MDFY_USER_SEQ_NO
+									 , MDFY_DT )
+		VALUES ((SELECT WK.WK_TY_NM
+				  FROM TB_WKTYMNG WK
+				  WHERE SEQ_NO = #{wkTySeqNo})
+			   , #{wkTySeqNo}
+				,#{locTySeqNo}
+			   , #{notiEng}
+			   , #{notiBen}
+			   , #{msgFwdYn}
+			   , GETDATE()
+			   , #{mdfyUserSeqNO}
+			   ,GETDATE())
+		]]>
+	</insert>
+
+	<!--
+		Update CidsNotifyManager Data
+	-->
+	<update id="updateCidsNotifyManagerData" parameterType="com.urielsoft.cids.management.biz.dto.UpdateCidsNotifyManagerDTO">
+		<![CDATA[
+		UPDATE TB_NOTIMNG
+			SET WK_TY_NM  = (SELECT WK.WK_TY_NM
+								 FROM TB_WKTYMNG WK
+							 		WHERE SEQ_NO = #{wkTySeqNo}),
+				WK_TY_SEQ_NO     = #{wkTySeqNo},
+				LOC_TY_SEQ_NO    = #{locTySeqNo},
+				NOTI_ENG         = #{notiEng},
+				NOTI_BEN         = #{notiBen},
+				MSG_FWD_YN       = #{msgFwdYn},
+				MDFY_USER_SEQ_NO = #{mdfyUserSeqNO},
+				MDFY_DT          = GETDATE()
+		WHERE SEQ_NO = #{seqNo}
+		]]>
+	</update>
+
+	<!-- Select Cids Notify Manager Data List with Pagination and Search
+	-->
+	<select id="selectCidsNotifyManagerDataListPaginationAndSearch" resultType="com.urielsoft.cids.management.biz.dto.ViewCidsNotifyManagerDTO">
+		<![CDATA[
+			      SELECT NOTI.* , COUNT(*) OVER() AS countFilterData
+             			, US.USER_NM
+        	 			, LOC.LOC_NM
+        		  FROM TB_NOTIMNG NOTI
+        				JOIN TB_USERINFOMNG US
+        					ON NOTI.MDFY_USER_SEQ_NO = US.SEQ_NO
+        				LEFT JOIN TB_LOCTYMNG LOC
+        					ON NOTI.LOC_TY_SEQ_NO = LOC.SEQ_NO
+   		]]>
+		<where>
+			<if test="searchCidsNotifyManagerPaginationStatusDTO.searchLocTySeqNoValue != null">
+				AND NOTI.LOC_TY_SEQ_NO IN
+				<foreach item="item" index="index" collection="searchCidsNotifyManagerPaginationStatusDTO.searchLocTySeqNoValue" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="searchCidsNotifyManagerPaginationStatusDTO.searchWkTySeqNoValue != null">
+				AND NOTI.WK_TY_SEQ_NO = #{searchCidsNotifyManagerPaginationStatusDTO.searchWkTySeqNoValue}
+			</if>
+			<if test="searchCidsNotifyManagerPaginationStatusDTO.searchRegDtValue != null">
+				AND CONVERT(DATE , NOTI.REG_DT) = #{searchCidsNotifyManagerPaginationStatusDTO.searchRegDtValue}
+			</if>
+		</where>
+		<choose>
+			<when test="searchCidsNotifyManagerPaginationStatusDTO.sortBy == 'seqNo' ">
+				<![CDATA[ ORDER BY NOTI.SEQ_NO ${searchCidsNotifyManagerPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchCidsNotifyManagerPaginationStatusDTO.sortBy == 'wkTySeqNo' ">
+				<![CDATA[ ORDER BY NOTI.WK_TY_SEQ_NO ${searchCidsNotifyManagerPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchCidsNotifyManagerPaginationStatusDTO.sortBy == 'locTySeqNo' ">
+				<![CDATA[ ORDER BY NOTI.LOC_TY_SEQ_NO ${searchCidsNotifyManagerPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchCidsNotifyManagerPaginationStatusDTO.sortBy == 'notiEng' ">
+				<![CDATA[ ORDER BY NOTI.NOTI_ENG ${searchCidsNotifyManagerPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchCidsNotifyManagerPaginationStatusDTO.sortBy == 'notiBen' ">
+				<![CDATA[ ORDER BY NOTI.NOTI_BEN ${searchCidsNotifyManagerPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchCidsNotifyManagerPaginationStatusDTO.sortBy == 'mdfyUserSeqNO' ">
+				<![CDATA[ ORDER BY NOTI.MDFY_USER_SEQ_NO ${searchCidsNotifyManagerPaginationStatusDTO.dir} ]]>
+			</when>
+			<when test=" searchCidsNotifyManagerPaginationStatusDTO.sortBy == 'regDt' ">
+				<![CDATA[ ORDER BY NOTI.REG_DT ${searchCidsNotifyManagerPaginationStatusDTO.dir} ]]>
+			</when>
+
+			<otherwise>
+				<![CDATA[ ORDER BY NOTI.SEQ_NO DESC ]]>
+			</otherwise>
+		</choose>
+		<![CDATA[
+			 	OFFSET #{start} ROWS FETCH NEXT #{length} ROWS ONLY
+    		]]>
+	</select>
+</mapper>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<th:block th:include="layout/header" />
+</head>
+<body class="hold-transition sidebar-mini">
+	<div class="wrapper">
+		<div class="card-header p-0 border-bottom-0"></div>
+		<div class="content-wrapper" style="margin-left: 5px;">
+			<th:block layout:fragment="content_body" />
+		</div>
+	</div>
+
+	<th:block th:replace="layout/footer" />
+	
+	<th:block layout:fragment="content_script" />
+</body>
+</html>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.urielsoft.cids.management.biz.mapper.MultilingualManagementMapper">
+
+    <!--
+           Select Multilingual Management Data All List
+       -->
+    <select id="selectMultilingualManagementDataAllList" resultType="com.urielsoft.cids.management.biz.dto.ViewMultilingualManagementDTO">
+		<![CDATA[
+        SELECT  IT.*,
+        		WK.WK_TY_NM,
+        		LO.LOC_NM
+        FROM TB_ITEMMNG IT
+			LEFT JOIN TB_WKTYMNG WK
+        		ON IT.WK_TY_SEQ_NO = WK.SEQ_NO
+			LEFT JOIN TB_LOCTYMNG LO
+        		ON IT.LOC_TY_SEQ_NO = LO.SEQ_NO
+        ]]>
+	</select>
+
+    <!--
+    Select Multilingual Management Data by Seq
+	-->
+    <select id="selectMultilingualManagementDataBySeq" resultType="com.urielsoft.cids.management.biz.dto.ViewMultilingualManagementDTO">
+		<![CDATA[
+		SELECT  IT.*,
+				WK.WK_TY_NM,
+				LO.LOC_NM
+		FROM TB_ITEMMNG IT
+				 LEFT JOIN TB_WKTYMNG WK
+						   ON IT.WK_TY_SEQ_NO = WK.SEQ_NO
+				 LEFT JOIN TB_LOCTYMNG LO
+						   ON IT.LOC_TY_SEQ_NO = LO.SEQ_NO
+        WHERE IT.SEQ_NO = #{multilingualManagementSeq}
+        ]]>
+	</select>
+
+	<!--
+		Insert New Multilingual Management Data
+	-->
+	<insert id="insertMultilingualManagementData" parameterType="com.urielsoft.cids.management.biz.dto.CreateMultilingualManagementDTO">
+		<![CDATA[
+		INSERT INTO TB_ITEMMNG 	( ITEM_NM_ENG, ITEM_NM_BEN
+								  , ITEM_NM_KOR, TAG_ID
+								  , REG_DT, MDFY_USER_SEQ_NO
+								  , MDFY_DT)
+		VALUES (
+			    #{itemNmEng}
+			   ,#{itemNmBen}
+			   , #{itemNmKor}
+			   , #{tagId}
+			   , GETDATE()
+			   , #{mdfyUserSeqNO}
+			   ,GETDATE())
+		]]>
+	</insert>
+
+	<!--
+            Select Multilingual Management Data by tagId
+     -->
+	<select id="selectMultilingualManagementByTagId" resultType="com.urielsoft.cids.management.biz.dto.ViewMultilingualManagementDTO">
+		<![CDATA[
+		SELECT TOP 1 TB_ITEMMNG.*
+		FROM TB_ITEMMNG
+		WHERE TB_ITEMMNG.TAG_ID = #{tagId}
+		]]>
+	</select>
+
+	<!--
+		Update Multilingual Management Data
+	-->
+	<update id="updateMultilingualManagementData" parameterType="com.urielsoft.cids.management.biz.dto.UpdateMultilingualManagementDTO">
+		<![CDATA[
+		UPDATE TB_ITEMMNG
+		SET
+			ITEM_NM_ENG      = #{itemNmEng},
+			ITEM_NM_BEN      = #{itemNmBen},
+			ITEM_NM_KOR      = #{itemNmKor},
+			TAG_ID           = #{tagId},
+			MDFY_USER_SEQ_NO = #{mdfyUserSeqNO},
+			MDFY_DT          = GETDATE()
+		WHERE SEQ_NO = #{seqNo}
+		]]>
+	</update>
+</mapper>

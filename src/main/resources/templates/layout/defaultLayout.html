@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<th:block layout:fragment="title" />
+	<title>Urielsoft CIDS Management</title>
+	<th:block th:include="layout/header" />
+	<th:block layout:fragment="additional_css" />
+</head>
+<body class="layout-top-nav control-sidebar-slide-open layout-navbar-fixed" style="height: auto;">
+	<div class="wrapper">
+		<th:block th:replace="layout/topMenu::topMenu" />
+		<div class="bg-white" style="margin-top:55px">
+			<div >
+				<th:block layout:fragment="content_body" />
+			</div>
+		</div>
+	</div>
+	<section aria-label="Dialog">
+		<div id="dialog" title="Title Dialog">
+			<div id="dialogBody"></div>
+		</div>
+	</section>
+	<th:block th:replace="layout/footer" />
+
+	<th:block layout:fragment="content_script" />
+</body>
+</html>
